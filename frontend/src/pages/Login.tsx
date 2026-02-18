@@ -40,7 +40,7 @@ export default function Login() {
                     <input 
                         type="submit" 
                         value="Submit"
-                        className="bg-black text-white px-4 py-2 rounded mt-2 focus-visible:outline-0 focus-visible:bg-neutral-950 hover:bg-neutral-950 active:bg-neutral-800 transition"
+                        className="bg-black text-white px-4 py-2 rounded mt-2 focus-visible:outline-0 focus-visible:bg-neutral-900 hover:bg-neutral-900 active:bg-neutral-800 transition"
                     />
                 </form>
             </main>
