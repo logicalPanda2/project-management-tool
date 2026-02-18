@@ -24,7 +24,7 @@ export default function Home() {
 
     return (
         projects.map((project) => (
-            <div className="max-w-2xl w-4/5 p-6 border rounded-lg relative" key={project.title}>
+            <div className="max-w-2xl md:w-4/5 mb-6 p-6 border rounded-lg relative" key={project.title}>
                 <p className="text-2xl mb-2">{project.title}</p>
                 <p className="mb-6">{project.description}</p>
                 <div className={`absolute top-6 right-6 border w-4 h-4 rounded-full ${project.status === "INCOMPLETE" ? "bg-black" : "bg-white"}`}></div>
