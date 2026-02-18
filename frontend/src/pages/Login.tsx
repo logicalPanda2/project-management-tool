@@ -6,7 +6,7 @@ export default function Login() {
 
     return (
         <div className="flex justify-center items-center md:min-h-screen min-h-[75vh]">
-            <main className="flex flex-col justify-center w-2/3 max-w-md">
+            <main className="flex flex-col flex-nowrap justify-center w-2/3 max-w-md">
                 <h1 className="text-4xl mb-8">Log in to your account</h1>
                 <form action="" className="flex flex-col gap-6" autoComplete="false">
                     <div className="flex flex-col gap-1">
