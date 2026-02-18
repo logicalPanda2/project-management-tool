@@ -13,17 +13,11 @@ interface Project {
 }
 
 export default function Home() {
-    const projects: Project[] = [
-        {
-            title: "Placeholder project",
-            description: "A project made to simplify the frontend workflow",
-            status: "INCOMPLETE",
-            tasks: [],
-        }
-    ]; // some role based API fetch that gets all projects
+    const projects: Project[] = []; // some role based API fetch that gets all projects
 
     return (
-        projects.map((project) => (
+        projects.length > 0 
+        ? projects.map((project) => (
             <div className="max-w-2xl md:w-4/5 mb-6 p-6 border rounded-lg relative" key={project.title}>
                 <p className="text-2xl mb-2">{project.title}</p>
                 <p className="mb-6">{project.description}</p>
@@ -31,5 +25,9 @@ export default function Home() {
                 <button className="bg-black text-white rounded focus-visible:outline-0 focus-visible:bg-neutral-900 hover:bg-neutral-900 active:bg-neutral-800 px-3 py-1">View</button>
             </div>
         ))
+        : <>
+            <p className="text-center text-2xl text-neutral-900 mb-2">There are no projects yet.</p>
+            <p className="flex flex-row items-center justify-center gap-2.5 text-xl text-neutral-900">Create a new project by clicking the <span className="text-xs bg-black text-white rounded px-2.5 py-1 mt-0.5">New</span> button!</p>
+        </>
     );
 }
