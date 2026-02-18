@@ -6,7 +6,7 @@ import View from "../pages/View";
 import Home from "../pages/Home";
 
 export default function AppRoutes() {
-    return (<>
+    return (
         <Routes>
             <Route path="/" element={<Root />}>
                 <Route index element={<Home />} />
@@ -15,5 +15,5 @@ export default function AppRoutes() {
             </Route>
             <Route path="/login" element={<Login />} />
         </Routes>
-    </>);
+    );
 }
