@@ -25,3 +25,6 @@ dist-ssr
 
 # Developer notes
 dev_notes
+
+# Environment variables
+.env
