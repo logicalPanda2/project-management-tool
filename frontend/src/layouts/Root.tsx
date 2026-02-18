@@ -26,7 +26,7 @@ export default function Root() {
                     </ul>
                 </nav>
             </header>
-            <main className="flex grow flex-nowrap p-12 pt-0">
+            <main className="flex flex-col grow flex-nowrap p-12 pt-0">
                 <Outlet />
             </main>
         </div>
