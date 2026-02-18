@@ -4,6 +4,7 @@ import Login from "./../pages/Login";
 import Project from "../pages/Project";
 import View from "../pages/View";
 import Home from "../pages/Home";
+import NotFound from "../pages/NotFound";
 
 export default function AppRoutes() {
     return (
@@ -14,6 +15,7 @@ export default function AppRoutes() {
                 <Route path="view" element={<View />} />
             </Route>
             <Route path="/login" element={<Login />} />
+            <Route path="*" element={<NotFound />} />
         </Routes>
     );
 }
