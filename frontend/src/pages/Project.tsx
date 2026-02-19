@@ -1,5 +1,10 @@
 import { useState } from "react";
 
+interface Comment {
+    user: string,
+    text: string,
+}
+
 export default function Project() {
     const [placeholderProject, setProject] = useState<Project>({
         title: "Placeholder project",
@@ -24,10 +29,16 @@ export default function Project() {
         ],
         id: crypto.randomUUID(),
     }); // will be replaced by fetch based on parameters
-    const [comments, setComments] = useState<Record<string, string>>({
-        "User 1": "Cool project my guy",
-        "User 2": "Looks good dude. Good luck!"
-    });
+    const [comments, setComments] = useState<Comment[]>([
+        {
+            user: "User 1",
+            text: "Cool project my guy",
+        },
+        {
+            user: "User 2",
+            text: "Looks good dude, good luck!",
+        }
+    ]);
     const [comment, setComment] = useState<string>(""); 
 
     const markTaskAsDone = (task: Task): void => {
@@ -52,10 +63,13 @@ export default function Project() {
     }
 
     const postComment = (): void => {
-        setComments({
-            ...comments, 
-            [`User 3`]: `${comment}`,
-        });
+        setComments([
+            ...comments,
+            {
+                user: "User 1",
+                text: comment,   
+            }
+        ]);
 
         setComment("");
     }
@@ -90,11 +104,11 @@ export default function Project() {
                 <header>
                     <h2 className="text-3xl mb-4">Comments</h2>
                 </header>
-                {Object.entries(comments).length > 0
-                    ? Object.entries(comments).map(([key, value]) => (
+                {comments.length > 0
+                    ? comments.map((c) => (
                         <div className="relative mb-4 border max-w-2xl p-4 rounded">
-                            <p className="mb-2">{key}</p>
-                            <p className="text-xl">{value}</p>
+                            <p className="mb-2">{c.user}</p>
+                            <p className="text-xl">{c.text}</p>
                         </div>
                     ))
                     : <p className="text-xl bg-neutral-900">There are no comments yet.</p>
