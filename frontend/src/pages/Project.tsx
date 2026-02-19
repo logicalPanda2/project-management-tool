@@ -99,6 +99,12 @@ export default function Project() {
         setComment("");
     }
 
+    const deleteComment = (comment: Comment): void => {
+        setComments([
+            ...comments.filter(c => c.id !== comment.id),
+        ]);
+    }
+
     return (<>
         <article>
             <section className="mb-8">
@@ -125,7 +131,7 @@ export default function Project() {
                             }
                         </div>
                     ))
-                    : <p className="text-xl bg-neutral-900">There are no tasks yet.</p>
+                    : <p className="text-xl text-neutral-900">There are no tasks yet.</p>
                 }
             </section>
             <section className="mb-8">
@@ -134,12 +140,15 @@ export default function Project() {
                 </header>
                 {comments.length > 0
                     ? comments.map((c) => (
-                        <div className="relative mb-4 border max-w-2xl p-4 rounded" key={c.id}>
-                            <p className="mb-2">{c.user}</p>
-                            <p className="text-xl">{c.text}</p>
+                        <div className="flex flex-row flex-nowrap justify-between items-center mb-4 border max-w-2xl p-4 rounded" key={c.id}>
+                            <div>
+                                <p className="mb-2">{c.user}</p>
+                                <p className="text-xl">{c.text}</p>
+                            </div>
+                            <button className="bg-red-600 rounded text-white hover:bg-red-700 focus-visible:outline-0 focus-visible:bg-red-700 active:bg-red-800 px-2 py-0.5 transition mr-2" onClick={() => deleteComment(c)}>Delete</button>
                         </div>
                     ))
-                    : <p className="text-xl bg-neutral-900">There are no comments yet.</p>
+                    : <p className="text-xl text-neutral-900">There are no comments yet.</p>
                 }
                 <div className="flex flex-row flex-nowrap items-center mt-8">
                     <input
