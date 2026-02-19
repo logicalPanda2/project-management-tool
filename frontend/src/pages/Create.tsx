@@ -85,6 +85,11 @@ export default function Create() {
                     </div>
                 })}
             </section>
+            <input 
+                type="submit" 
+                value="Confirm"
+                className="bg-black text-white px-4 py-2 rounded mt-2 focus-visible:outline-0 focus-visible:bg-neutral-900 hover:bg-neutral-900 active:bg-neutral-800 transition max-w-md w-full"
+            />
         </form>
     );
 }
