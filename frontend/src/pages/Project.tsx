@@ -66,8 +66,7 @@ export default function Project() {
                 {placeholderProject.tasks.length > 0
                     ? placeholderProject.tasks.map((task) => (
                         <div className="flex flex-row justify-between items-center relative mb-4 border max-w-2xl p-4 rounded">
-                            <p className="text-xl ml-6">{task.title}</p>
-                            <div className={`absolute top-2 left-2 border w-3 h-3 rounded-full ${task.status === "INCOMPLETE" ? "bg-black" : "bg-white"}`}></div>
+                            <p className="text-xl ml-2">{task.title}</p>
                             {task.status === "INCOMPLETE" 
                                 ? <button className="mr-2 px-2 py-0.5 bg-black rounded text-white hover:bg-neutral-900 focus-visible:outline-0 focus-visible:bg-neutral-900 active:bg-neutral-800" onClick={() => markTaskAsDone(task)}>Mark as done</button>
                                 : <p className="mr-6">Finished</p>
