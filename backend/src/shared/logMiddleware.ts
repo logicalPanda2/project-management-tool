@@ -10,6 +10,7 @@ export default function logMiddleware(req: Request, res: Response, next: (...arg
             ${req.method} ${req.originalUrl}
             Done in ${durationMs}ms
             Finished with status ${req.statusCode}
+            with the following message ${req.statusMessage}
             `
         );
     });
