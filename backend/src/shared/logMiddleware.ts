@@ -6,12 +6,7 @@ export default function logMiddleware(req: Request, res: Response, next: (...arg
     res.on("finish", () => {
         const durationMs = Date.now() - startTimeInMs;
         console.log(
-            `
-            ${req.method} ${req.originalUrl}
-            Done in ${durationMs}ms
-            Finished with status ${req.statusCode}
-            with the following message ${req.statusMessage}
-            `
+            `${req.method} ${req.originalUrl}\nDone in ${durationMs}ms\nFinished with status ${req.statusCode}\nwith the following message ${req.statusMessage}\n`
         );
     });
 
