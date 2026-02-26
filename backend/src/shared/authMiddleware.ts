@@ -4,7 +4,7 @@ import type { Request, Response } from "express";
 
 dotenv.config();
 
-export default function auth(
+export default function authMiddleware(
 	req: Request,
 	res: Response,
 	next: (...params: any[]) => any,

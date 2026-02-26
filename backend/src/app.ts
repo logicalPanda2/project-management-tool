@@ -2,13 +2,14 @@ import cookieParser from "cookie-parser";
 import express from "express";
 import logMiddleware from "./shared/logMiddleware.js";
 import errorMiddleware from "./shared/errorMiddleware.js";
+import authMiddleware from "./shared/authMiddleware.js";
 
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(logMiddleware);
-// auth middleware
+app.use(authMiddleware);
 
 // routes
 
