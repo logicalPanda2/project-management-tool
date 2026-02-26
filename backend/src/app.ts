@@ -1,8 +1,8 @@
 import cookieParser from "cookie-parser";
 import express from "express";
-import logMiddleware from "./shared/logMiddleware.js";
-import errorMiddleware from "./shared/errorMiddleware.js";
-import authMiddleware from "./shared/authMiddleware.js";
+import logMiddleware from "./shared/middlewares/logMiddleware.js";
+import errorMiddleware from "./shared/middlewares/errorMiddleware.js";
+import authMiddleware from "./shared/middlewares/authMiddleware.js";
 
 const app = express();
 
