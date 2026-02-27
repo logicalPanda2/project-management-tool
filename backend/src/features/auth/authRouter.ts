@@ -1,10 +1,10 @@
 import express from "express";
-import { getCredentials, getNewAccessToken, deleteCredentials } from "./authController.js";
+import { login, refresh, logout } from "./authController.js";
 
 const authRouter = express.Router();
 
-authRouter.post("/login", getCredentials);
-authRouter.post("/refresh", getNewAccessToken);
-authRouter.post("/logout", deleteCredentials);
+authRouter.post("/login", login);
+authRouter.post("/logout", logout);
+authRouter.post("/refresh", refresh);
 
 export default authRouter;
