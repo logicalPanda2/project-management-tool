@@ -17,3 +17,11 @@ export async function getUserById(id: string): Promise<User | undefined> {
 
     return result?.rows[0];
 }
+
+export async function createNewUser(email: string, hashedPw: string): Promise<void> {
+    await pool?.query(
+        `INSERT INTO users (email, password)
+        VALUES($1, $2);`,
+        [email, hashedPw]
+    );
+}
