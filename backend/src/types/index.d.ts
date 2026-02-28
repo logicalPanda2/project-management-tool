@@ -14,6 +14,12 @@ interface Project {
 	id: string;
 }
 
+interface ProjectMetadata {
+    title: string;
+	description: string;
+	status: Status;
+}
+
 interface User {
 	email: string;
 	password: string;
