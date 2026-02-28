@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { getUserByEmail } from "../users/userModel.js";
+import bcrypt from "bcryptjs";
 
 dotenv.config();
 
@@ -45,4 +47,17 @@ export function verifyRefreshToken(token: string) {
         throw new Error("Secret keys not configured. Check .env.example for more information.");
 
     return jwt.verify(token, process.env.JWT_REFRESH_SECRET) as { id: string };
+}
+
+export async function verifyUserCredentials(
+    email: string, 
+    password: string
+): Promise<null | User> {
+    const user = await getUserByEmail(email);
+
+    if(!user) return null;
+    if(user.email !== email) return null;
+    if(await bcrypt.compare(password, user.password)) return null;
+
+    return user;
 }
