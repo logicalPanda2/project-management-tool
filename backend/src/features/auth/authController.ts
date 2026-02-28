@@ -36,7 +36,7 @@ export async function login(
 	return undefined;
 }
 
-export function refresh(
+export async function refresh(
 	req: Request,
 	res: Response,
 	next: (...args: any[]) => any,
@@ -47,7 +47,7 @@ export function refresh(
 		if (!refreshToken) return res.sendStatus(401);
 
 		const decodedUserData = verifyRefreshToken(refreshToken);
-		const accessToken = renewAccessToken(decodedUserData);
+		const accessToken = await renewAccessToken(decodedUserData);
 
 		if (!accessToken) return res.sendStatus(403);
 
