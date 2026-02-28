@@ -23,7 +23,7 @@ export default function authMiddleware(
 	if (!token) return res.sendStatus(401);
 
 	try {
-		const user = jwt.verify(token, process.env.JWT_ACCESS_SECRET) as User;
+		const user = jwt.verify(token, process.env.JWT_ACCESS_SECRET) as DecodedUserData;
 		req.user = user;
 		next();
 	} catch (e) {

@@ -1,5 +1,4 @@
-export interface User {
+export interface DecodedUserData {
 	email: string;
-	password: string;
 	id: string;
 }

@@ -25,6 +25,11 @@ interface SentUserData {
 	password: string;
 }
 
+interface DecodedUserData {
+    id: string,
+    email: string,
+}
+
 interface HttpError extends Error {
 	status: number;
 }
