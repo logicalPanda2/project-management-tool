@@ -1,5 +1,5 @@
-import type { Request, Response } from "express";
-import { getAllProjectMetadataByUserId } from "./projectModel.js";
+import type { Request, Response } from "express"
+import { getAllProjectMetadataByUserId, getProjectMetadataById } from "./projectModel.js";
 
 export async function getAllProjects(req: Request, res: Response, next: (...args: any[]) => any) {
     try {
@@ -16,8 +16,23 @@ export async function getAllProjects(req: Request, res: Response, next: (...args
     return undefined;
 }
 
-export function getProject() {
+export async function getProject(req: Request, res: Response, next: (...args: any[]) => any) {
+    try {
+        if(
+            !("projectId" in req.params) ||
+            typeof req.params.projectId !== "string"
+        ) return res.send(400);
 
+        const id = req.params.projectId;
+
+        const project: ProjectMetadata = await getProjectMetadataById(id);
+
+        return project;
+    } catch(e) {
+        next(e);
+    }
+
+    return undefined;
 }
 
 export function createProject() {
