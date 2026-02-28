@@ -10,5 +10,6 @@ projectRouter.post("/:projectId");
 projectRouter.delete("/:projectId");
 projectRouter.use("/:projectId/tasks", taskRouter);
 projectRouter.use("/:projectId/comments", commentRouter);
+projectRouter.post("/:projectId/members");
 
 export default projectRouter;
