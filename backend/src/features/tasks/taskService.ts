@@ -1,27 +1,20 @@
 import { addNewTasks } from "./taskModel.js";
 
 export function createInsertQueryForNTasks(taskArrLen: number) {
-    let query = "INSERT INTO tasks (id, title, status, project_id) VALUES";
+    const baseQuery = "INSERT INTO tasks (id, title, status, project_id) VALUES";
+    const placeholders = [];
+    const placeholdersPerInsert = 4;
 
-    for(let i = 0; i < taskArrLen; i += 4) {
-        query += `\n($${i + 1}, $${i + 2}, $${i + 3}, $${i + 4})`;
+    for(let i = 1; i <= taskArrLen; i++) {
+        const n = placeholdersPerInsert * i;
+        placeholders.push(`($${n - 3}, $${n - 2}, $${n - 1}, $${n})`);
     }
 
-    query += ";";
-
-    return query;
+    return `${baseQuery}${placeholders.join(",")};`;
 }
 
 export function createDataArrForNTasks(tasks: Task[], projectId: string) {
-    const data: string[] = [];
-    
-    tasks.map(t => {
-        const tuple = [t.id, t.title, t.status, projectId];
-
-        data.push(...tuple);
-    });
-
-    return data;
+    return tasks.flatMap(t => [t.id, t.title, t.status, projectId]);
 }
 
 export function createManyTasks(tasks: Task[], projectId: string) {
