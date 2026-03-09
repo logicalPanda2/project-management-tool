@@ -1,5 +1,5 @@
 import type { Request, Response } from "express"
-import { getAllProjectMetadataByUserId, getProjectMetadataById } from "./projectModel.js";
+import { getAllProjectMetadataByUserId, getProjectMetadataById } from "./projectRepo.js";
 
 export async function getAllProjects(req: Request, res: Response, next: (...args: any[]) => any) {
     try {

@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { getUserByEmail, getUserById } from "../users/userModel.js";
+import { getUserByEmail, getUserById } from "../users/userRepo.js";
 import bcrypt from "bcryptjs";
 
 dotenv.config();
