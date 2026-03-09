@@ -1,6 +1,6 @@
 import pool from "../../config/db.js";
 
-export async function getAllProjectMetadataByUserId(userId: string): Promise<ProjectMetadata[]> {
+export async function getAllByUserId(userId: string): Promise<ProjectMetadata[]> {
     const result = await pool?.query(
         `SELECT
             p.title,
@@ -20,7 +20,7 @@ export async function getAllProjectMetadataByUserId(userId: string): Promise<Pro
     return rows ? rows : [];
 }
 
-export async function getProjectMetadataById(id: string): Promise<ProjectMetadata> {
+export async function getById(id: string): Promise<ProjectMetadata> {
     const result = await pool?.query(
         `SELECT title, description, status FROM projects WHERE id = $1;`,
         [id]
@@ -28,3 +28,4 @@ export async function getProjectMetadataById(id: string): Promise<ProjectMetadat
 
     return result?.rows[0];
 }
+
