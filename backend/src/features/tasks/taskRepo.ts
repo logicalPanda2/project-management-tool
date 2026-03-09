@@ -28,3 +28,10 @@ export async function updateById(id: string, newTask: Task) {
         [newTask.title, newTask.status, id]
     );
 }
+
+export async function deleteById(id: string) {
+    await pool?.query(
+        `DELETE FROM tasks WHERE id = $1;`,
+        [id]
+    );
+}
