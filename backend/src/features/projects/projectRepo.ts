@@ -43,3 +43,11 @@ export async function deleteById(projectId: string) {
         [projectId]
     );
 }
+
+export async function updateById(id: string, newProject: Project) {
+    await pool?.query(
+        `UPDATE projects SET title = $1, description = $2, status = $3
+        WHERE id = $4;`,
+        [newProject.title, newProject.description, newProject.status, id]
+    );
+}
