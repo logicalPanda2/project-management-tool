@@ -29,3 +29,10 @@ export async function getById(id: string): Promise<ProjectMetadata> {
     return result?.rows[0];
 }
 
+export async function create(project: Project) {
+    await pool?.query(
+        `INSERT INTO projects (id, title, description, status)
+        VALUES ($1, $2, $3, $4);`,
+        [project.id, project.title, project.description, project.status]
+    );
+}
