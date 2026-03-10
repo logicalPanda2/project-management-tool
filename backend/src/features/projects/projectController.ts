@@ -3,7 +3,7 @@ import * as projectRepo from "./projectRepo.js";
 import * as taskRepo from "./../tasks/taskRepo.js";
 import * as commentRepo from "./../comments/commentRepo.js";
 
-export async function getAllProjects(req: Request, res: Response, next: (...args: any[]) => any) {
+export async function getAll(req: Request, res: Response, next: (...args: any[]) => any) {
     try {
         const user = req.user;
         if(!user) return res.sendStatus(401);
@@ -18,7 +18,7 @@ export async function getAllProjects(req: Request, res: Response, next: (...args
     return undefined;
 }
 
-export async function getProject(req: Request, res: Response, next: (...args: any[]) => any) {
+export async function getById(req: Request, res: Response, next: (...args: any[]) => any) {
     try {
         if(
             !("projectId" in req.params) ||
@@ -46,14 +46,14 @@ export async function getProject(req: Request, res: Response, next: (...args: an
     return undefined;
 }
 
-export function createProject() {
+export function createAndUpdate() {
 
 }
 
-export function deleteProject() {
+export function deleteById() {
 
 }
 
-export function addUserToProject() {
+export function invite() {
 
 }
