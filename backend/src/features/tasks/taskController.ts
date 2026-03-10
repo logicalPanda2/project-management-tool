@@ -12,7 +12,7 @@ export async function getAll(req: Request, res: Response, next: (...args: any[])
         const projectId = req.params.projectId;
         const tasks = await taskRepo.getAllByProjectId(projectId);
 
-        res.json({
+        return res.json({
             tasks: tasks
         });
     } catch(e) {
@@ -33,9 +33,9 @@ export async function create(req: Request, res: Response, next: (...args: any[])
         const tasks = req.body;
 
         if(!(await Services.createOrCreateMany(tasks, projectId)))
-            res.sendStatus(400);
+            return res.sendStatus(400);
 
-        res.sendStatus(204);
+        return res.sendStatus(204);
     } catch(e) {
         next(e);
     }
@@ -44,5 +44,20 @@ export async function create(req: Request, res: Response, next: (...args: any[])
 }
 
 export async function remove(req: Request, res: Response, next: (...args: any[]) => any) {
+    try {
+        if(
+            !("taskId" in req.params) ||
+            typeof req.params.taskId !== "string"
+        ) return res.sendStatus(400);
 
+        const id = req.params.taskId;
+
+        await taskRepo.deleteById(id);
+
+        return res.sendStatus(204);
+    } catch(e) {
+        next(e);
+    }
+
+    return undefined;
 }
