@@ -24,17 +24,23 @@ export function isTaskArray(tasks: unknown): tasks is Task[] {
     if(tasks.length !== 0) {
         const task: unknown = tasks[0];
 
-        if(
-            typeof task !== "object" ||
-            task === null ||
-            !("title" in task) ||
-            !("status" in task) ||
-            !("id" in task) ||
-            typeof task.title !== "string" ||
-            typeof task.status !== "string" ||
-            typeof task.id !== "string"
-        ) return false;
+        if(!isTask(task)) return false;
     }
+
+    return true;
+}
+
+export function isTask(task: unknown): task is Task {
+    if(
+        typeof task !== "object" ||
+        task === null ||
+        !("title" in task) ||
+        !("status" in task) ||
+        !("id" in task) ||
+        typeof task.title !== "string" ||
+        typeof task.status !== "string" ||
+        typeof task.id !== "string"
+    ) return false;
 
     return true;
 }
@@ -44,13 +50,19 @@ export function isCommentArray(comments: unknown): comments is ProjectComment[] 
     if(comments.length !== 0) {
         const comment: unknown = comments[0];
 
-        if(
-            typeof comment !== "object" ||
-            comment === null ||
-            !("title" in comment) ||
-            typeof comment.title !== "string"
-        ) return false;
+        if(!isComment(comment)) return false;
     }
+
+    return true;
+}
+
+export function isComment(comment: unknown): comment is ProjectComment {
+    if(
+        typeof comment !== "object" ||
+        comment === null ||
+        !("title" in comment) ||
+        typeof comment.title !== "string"
+    ) return false;
 
     return true;
 }
