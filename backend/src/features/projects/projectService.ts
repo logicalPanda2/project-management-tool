@@ -3,7 +3,9 @@ import * as taskRepo from "./../tasks/taskRepo.js";
 import * as commentRepo from "./../comments/commentRepo.js";
 
 export async function getFullProjectData(id: string): Promise<Project | null> {
-    const metadata: ProjectMetadata = await projectRepo.getById(id);
+    const metadata = await projectRepo.getById(id);
+    if(!metadata) throw new Error("Invalid Project ID");
+
     const tasks: Task[] = await taskRepo.getAllByProjectId(id);
     const comments: ProjectComment[] = await commentRepo.getAllByProjectId(id);
 
