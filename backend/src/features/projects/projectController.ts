@@ -11,7 +11,7 @@ export async function getAll(req: Request, res: Response, next: (...args: any[])
 
         const projects: ProjectMetadata[] = await projectRepo.getAllByUserId(user.id);
 
-        res.json({ projects: projects });
+        return res.json({ projects: projects });
     } catch(e) {
         next(e);
     }
@@ -52,7 +52,7 @@ export async function createOrUpdate(req: Request, res: Response, next: (...args
 
         await Services.upsert(project);
 
-        res.sendStatus(204);
+        return res.sendStatus(204);
     } catch(e) {
         next(e);
     }
