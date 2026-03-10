@@ -1,7 +1,7 @@
 import type { Request, Response } from "express"
 import * as projectRepo from "./projectRepo.js";
 import * as userRepo from "./../users/userRepo.js";
-import { getFullProjectData } from "./projectService.js";
+import * as Services from "./projectService.js";
 import isProject from "../../shared/utils/typeGuards.js";
 
 export async function getAll(req: Request, res: Response, next: (...args: any[]) => any) {
@@ -28,7 +28,7 @@ export async function getById(req: Request, res: Response, next: (...args: any[]
 
         const id = req.params.projectId;
 
-        const project = await getFullProjectData(id);
+        const project = await Services.getFullProjectData(id);
 
         return res.json({
             project: project
@@ -40,23 +40,17 @@ export async function getById(req: Request, res: Response, next: (...args: any[]
     return undefined;
 }
 
-export async function createAndUpdate(req: Request, res: Response, next: (...args: any[]) => any) {
+export async function createOrUpdate(req: Request, res: Response, next: (...args: any[]) => any) {
     try {
-        const newProject = req.body;
+        const project = req.body;
 
         if(
-            typeof newProject !== "object" ||
-            newProject === null ||
-            !(isProject(newProject))
+            typeof project !== "object" ||
+            project === null ||
+            !(isProject(project))
         ) return res.sendStatus(400);
 
-        const project = await projectRepo.getById(newProject.id);
-
-        if(!project) {
-            await projectRepo.create(newProject);
-        } else {
-            await projectRepo.updateById(newProject.id, newProject);
-        }
+        Services.upsert(project);
 
         res.sendStatus(204);
     } catch(e) {

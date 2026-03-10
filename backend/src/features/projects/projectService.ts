@@ -16,3 +16,13 @@ export async function getFullProjectData(id: string): Promise<Project | null> {
         id: id,
     };
 }
+
+export async function upsert(newProject: Project) {
+    const project = await projectRepo.getById(newProject.id);
+    
+    if(!project) {
+        await projectRepo.create(newProject);
+    } else {
+        await projectRepo.updateById(newProject.id, newProject);
+    }
+}
