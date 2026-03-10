@@ -21,13 +21,13 @@ export async function getAllByUserId(userId: string): Promise<ProjectMetadata[]>
     return rows ? rows : [];
 }
 
-export async function getById(id: string): Promise<ProjectMetadata> {
+export async function getById(id: string): Promise<ProjectMetadata | null> {
     const result = await pool?.query(
         `SELECT title, description, status, id FROM projects WHERE id = $1;`,
         [id]
     );
 
-    return result?.rows[0];
+    return result?.rows[0] ?? null;
 }
 
 export async function create(project: Project) {
