@@ -5,14 +5,32 @@ import {
 	renewAccessToken,
 	verifyRefreshToken,
 	verifyUserCredentials,
+    userDoesNotExist,
 } from "./authService.js";
+import { createNewUser } from "../users/userRepo.js";
+import hashPassword from "../../shared/utils/hashPassword.js";
 
 export async function register(
     req: Request,
 	res: Response,
 	next: (...args: any[]) => any,
 ) {
-    
+    try {
+        const { email, password } = req.body;
+        const doesNotExist = await userDoesNotExist(email);
+
+        if(!doesNotExist) return res.sendStatus(204); // 204 to not expose internal user emails
+
+        const hashed = await hashPassword(password);
+        
+        await createNewUser(email, hashed);
+
+        return res.sendStatus(200);
+    } catch(e) {
+        next(e);
+    }
+
+    return undefined;
 }
 
 export async function login(
