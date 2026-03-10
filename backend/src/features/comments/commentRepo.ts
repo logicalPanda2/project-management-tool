@@ -9,7 +9,10 @@ export async function create(comment: ProjectComment, userId: string, projectId:
 }
 
 export async function deleteById(id: string) {
-
+    await pool?.query(
+        `DELETE FROM comments WHERE id = $1;`,
+        [id]
+    );
 }
 
 export async function getAllByProjectId(projectId: string) {
