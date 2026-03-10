@@ -1,4 +1,5 @@
 type Status = "COMPLETE" | "INCOMPLETE";
+type UserRole = "CONTRIBUTOR" | "CREATOR";
 
 interface Task {
 	title: string;
