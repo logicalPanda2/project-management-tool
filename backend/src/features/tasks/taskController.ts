@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import * as taskRepo from "./taskRepo.js";
-import { isTask, isTaskArray } from "../../shared/utils/typeGuards.js";
+import * as Services from "./taskService.js";
 
 export async function getAll(req: Request, res: Response, next: (...args: any[]) => any) {
     try {
@@ -32,13 +32,8 @@ export async function create(req: Request, res: Response, next: (...args: any[])
         const projectId = req.params.projectId;
         const tasks = req.body;
 
-        if(isTaskArray(tasks)) {
-            const task = tasks[0];
-            
-            if(isTask(task)) await taskRepo.createMany(tasks, projectId);
-        } else if(isTask(tasks)) {
-            await taskRepo.create(tasks, projectId);
-        } else res.sendStatus(400);
+        if(!(await Services.createOrCreateMany(tasks, projectId)))
+            res.sendStatus(400);
 
         res.sendStatus(204);
     } catch(e) {
