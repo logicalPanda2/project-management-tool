@@ -54,6 +54,13 @@ export function verifyRefreshToken(token: string): {id: string} | null {
     }
 }
 
+export async function userDoesNotExist(email: string) {
+    const user = await getUserByEmail(email);
+    
+    if(!user) return true;
+    else return false;
+}
+
 export async function verifyUserCredentials(
 	email: string,
 	password: string,
