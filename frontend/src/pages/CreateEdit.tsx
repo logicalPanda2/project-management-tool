@@ -1,5 +1,6 @@
 import useEditing from "../hooks/useEditing";
 import useTasks from "../hooks/useTasks";
+import useUserEmails from "../hooks/useUserEmails";
 
 export default function CreateEdit() {
 	const {
@@ -7,71 +8,9 @@ export default function CreateEdit() {
         titleErr, setTitleErr,
         description, setDescription,
         descriptionErr, setDescriptionErr,
-        userEmail, setUserEmail,
-        userCounter, setUserCounter,
-        userErr, setUserErr,
-        userEmails, setUserEmails
     } = useEditing();
-    const {
-        add, 
-        editStatus,
-        editTitle,
-        remove,
-        taskErr,
-        tasks,
-        setTaskErr,
-    } = useTasks();
-
-	const addUser = (): void => {
-		setUserErr("");
-
-		if (!userEmail.trim()) {
-			setUserErr("Cannot be empty");
-			return;
-		}
-
-		if (
-			!userEmail.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
-		) {
-			setUserErr("Invalid email pattern");
-			return;
-		}
-
-		setUserEmails([
-			...userEmails,
-			{
-				email: userEmail,
-				id: userCounter,
-			},
-		]);
-
-		setUserEmail("");
-        setUserCounter(c => c + 1);
-	};
-
-    const editUserEmail = (user: User, email: string): void => {
-        setUserErr("");
-
-        if (
-			!email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
-		) {
-			setUserErr("Invalid email pattern");
-		}
-
-        setUserEmails([
-            ...userEmails.map(u => u.id === user.id ? {
-                ...user,
-                email: email,
-            } : u)
-        ]);
-    }
-
-	const deleteUser = (
-		user: User,
-	): void => {
-
-		setUserEmails([...userEmails.filter((u) => u.id !== user.id)]);
-	};
+    const tasks = useTasks();
+    const users = useUserEmails();
 
 	const sendData = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
 		e.preventDefault();
@@ -82,19 +21,19 @@ export default function CreateEdit() {
 	const validate = () => {
 		setTitleErr("");
 		setDescriptionErr("");
-		setTaskErr("");
-		setUserErr("");
+		tasks.setTaskErr("");
+		users.setUserErr("");
 
-		if (!tasks.length) setTaskErr("A project must have at least one task");
+		if (!tasks.tasks.length) tasks.setTaskErr("A project must have at least one task");
 
 		if (!title.trim()) setTitleErr("Cannot be empty");
 		if (!description.trim()) setDescriptionErr("Cannot be empty");
-		tasks.forEach((task, i) => {
+		tasks.tasks.forEach((task, i) => {
 			if (!task.title.trim())
-				setTaskErr(`All tasks must have a title. Check Task ${i + 1}`);
+				tasks.setTaskErr(`All tasks must have a title. Check Task ${i + 1}`);
 		});
 
-		if (titleErr || descriptionErr || taskErr) {
+		if (titleErr || descriptionErr || tasks.taskErr) {
 			return false;
 		}
 
@@ -150,15 +89,15 @@ export default function CreateEdit() {
 					className="bg-black rounded text-white px-3 py-1.5 focus-visible:outline-0 focus-visible:bg-neutral-900 hover:bg-neutral-900 active:bg-neutral-800 transition mb-4"
 					onClick={(e) => {
                         e.preventDefault();
-                        add()
+                        tasks.add();
                     }}
 				>
 					Add task
 				</button>
-				{taskErr && (
-					<span className="mb-4 text-red-600 block">{taskErr}</span>
+				{tasks.taskErr && (
+					<span className="mb-4 text-red-600 block">{tasks.taskErr}</span>
 				)}
-				{tasks.map((task, index) => {
+				{tasks.tasks.map((task, index) => {
 					return (
 						<div className="mb-4" key={task.id}>
 							<label
@@ -174,7 +113,7 @@ export default function CreateEdit() {
 								className="border rounded focus-visible:outline-1 px-4 py-2 max-w-xl w-full"
 								value={task.title}
 								onChange={(e) => {
-                                    editTitle(task, e.target.value);
+                                    tasks.editTitle(task, e.target.value);
 								}}
 							/>
                             <p className="mt-2">Status: {task.status}</p>
@@ -182,7 +121,7 @@ export default function CreateEdit() {
 								className="bg-red-600 rounded text-white hover:bg-red-700 focus-visible:outline-0 focus-visible:bg-red-700 active:bg-red-800 px-2 py-0.5 transition mr-2 mt-4"
 								onClick={(e) => {
                                     e.preventDefault();
-                                    remove(task)
+                                    tasks.remove(task)
                                 }}
 							>
 								Remove
@@ -191,7 +130,7 @@ export default function CreateEdit() {
 								className="bg-black rounded text-white hover:bg-neutral-800 focus-visible:outline-0 focus-visible:bg-neutral-800 active:bg-neutral-700 px-2 py-0.5 transition mr-2 mt-4"
 								onClick={(e) => {
                                     e.preventDefault();
-                                    editStatus(task, "COMPLETE")
+                                    tasks.editStatus(task, "COMPLETE")
                                 }}
 							>
 								Mark as done
@@ -200,7 +139,7 @@ export default function CreateEdit() {
 								className="bg-black rounded text-white hover:bg-neutral-800 focus-visible:outline-0 focus-visible:bg-neutral-800 active:bg-neutral-700 px-2 py-0.5 transition mr-2 mt-4"
 								onClick={(e) => {
                                     e.preventDefault();
-                                    editStatus(task, "INCOMPLETE")
+                                    tasks.editStatus(task, "INCOMPLETE")
                                 }}
 							>
 								Mark as todo
@@ -222,27 +161,27 @@ export default function CreateEdit() {
 							id="userEmailInput"
 							placeholder="Add someone.."
 							className="border rounded focus-visible:outline-1 px-4 py-2"
-							value={userEmail}
-							onChange={(e) => setUserEmail(e.target.value)}
+							value={users.userEmail}
+							onChange={(e) => users.setUserEmail(e.target.value)}
 						/>
 						<button
 							className="bg-black rounded text-white hover:bg-neutral-900 focus-visible:outline-0 focus-visible:bg-neutral-900 active:bg-neutral-800 py-1 px-3 ml-4"
 							onClick={(e) => {
                                 e.preventDefault();
-                                addUser();
+                                users.add();
                             }}
 						>
 							Add
 						</button>
 					</div>
-					{userErr && (
+					{users.userErr && (
 						<span className="mb-4 text-red-600 block">
-							{userErr}
+							{users.userErr}
 						</span>
 					)}
 				</div>
-				{userEmails.length > 0 ? (
-					userEmails.map((u) => (
+				{users.userEmails.length > 0 ? (
+					users.userEmails.map((u) => (
 						<div
 							className="flex flex-row flex-nowrap justify-between items-center mb-4 border max-w-2xl p-4 rounded"
 							key={u.id}
@@ -253,7 +192,7 @@ export default function CreateEdit() {
                                 name={`${u.id}`} 
                                 value={u.email}
                                 onChange={(e) => {
-                                    editUserEmail(u, e.target.value)
+                                    users.editEmail(u, e.target.value)
                                 }}
                             >
                             </input>
@@ -261,7 +200,7 @@ export default function CreateEdit() {
 								className="bg-red-600 rounded text-white hover:bg-red-700 focus-visible:outline-0 focus-visible:bg-red-700 active:bg-red-800 px-2 py-0.5 transition mr-2"
 								onClick={(e) => {
                                     e.preventDefault();
-                                    deleteUser(u);
+                                    users.remove(u);
                                 }}
 							>
 								Remove

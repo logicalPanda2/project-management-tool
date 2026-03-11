@@ -5,19 +5,11 @@ export default function useEditing() {
     const [titleErr, setTitleErr] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const [descriptionErr, setDescriptionErr] = useState<string>("");
-    const [userEmail, setUserEmail] = useState<string>("");
-    const [userCounter, setUserCounter] = useState<number>(0);
-    const [userErr, setUserErr] = useState<string>("");
-    const [userEmails, setUserEmails] = useState<User[]>([]);
 
     return {
         title, setTitle,
         titleErr, setTitleErr,
         description, setDescription,
-        descriptionErr, setDescriptionErr,
-        userEmail, setUserEmail,
-        userCounter, setUserCounter,
-        userErr, setUserErr,
-        userEmails, setUserEmails
+        descriptionErr, setDescriptionErr
     };
 }
