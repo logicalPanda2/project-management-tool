@@ -22,10 +22,7 @@ export default function CreateEdit() {
         setTaskErr,
     } = useTasks();
 
-	const addUser = (
-		e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-	): void => {
-		e.preventDefault();
+	const addUser = (): void => {
 		setUserErr("");
 
 		if (!userEmail.trim()) {
@@ -52,11 +49,26 @@ export default function CreateEdit() {
         setUserCounter(c => c + 1);
 	};
 
+    const editUserEmail = (user: User, email: string): void => {
+        setUserErr("");
+
+        if (
+			!email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+		) {
+			setUserErr("Invalid email pattern");
+		}
+
+        setUserEmails([
+            ...userEmails.map(u => u.id === user.id ? {
+                ...user,
+                email: email,
+            } : u)
+        ]);
+    }
+
 	const deleteUser = (
-		e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
 		user: User,
 	): void => {
-		e.preventDefault();
 
 		setUserEmails([...userEmails.filter((u) => u.id !== user.id)]);
 	};
@@ -162,7 +174,6 @@ export default function CreateEdit() {
 								className="border rounded focus-visible:outline-1 px-4 py-2 max-w-xl w-full"
 								value={task.title}
 								onChange={(e) => {
-									e.preventDefault();
                                     editTitle(task, e.target.value);
 								}}
 							/>
@@ -216,7 +227,10 @@ export default function CreateEdit() {
 						/>
 						<button
 							className="bg-black rounded text-white hover:bg-neutral-900 focus-visible:outline-0 focus-visible:bg-neutral-900 active:bg-neutral-800 py-1 px-3 ml-4"
-							onClick={(e) => addUser(e)}
+							onClick={(e) => {
+                                e.preventDefault();
+                                addUser();
+                            }}
 						>
 							Add
 						</button>
@@ -233,10 +247,22 @@ export default function CreateEdit() {
 							className="flex flex-row flex-nowrap justify-between items-center mb-4 border max-w-2xl p-4 rounded"
 							key={u.id}
 						>
-							<p>{u.email}</p>
+							<input 
+                                type="text" 
+                                id={`${u.id}`} 
+                                name={`${u.id}`} 
+                                value={u.email}
+                                onChange={(e) => {
+                                    editUserEmail(u, e.target.value)
+                                }}
+                            >
+                            </input>
 							<button
 								className="bg-red-600 rounded text-white hover:bg-red-700 focus-visible:outline-0 focus-visible:bg-red-700 active:bg-red-800 px-2 py-0.5 transition mr-2"
-								onClick={(e) => deleteUser(e, u)}
+								onClick={(e) => {
+                                    e.preventDefault();
+                                    deleteUser(u);
+                                }}
 							>
 								Remove
 							</button>
