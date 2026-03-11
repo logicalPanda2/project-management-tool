@@ -29,6 +29,7 @@ export default function Project() {
 				id: crypto.randomUUID(),
 			},
 		],
+        comments: null,
 		id: crypto.randomUUID(),
 	}); // will be replaced by fetch based on parameters
 	const [comments, setComments] = useState<Comment[]>([
@@ -47,6 +48,8 @@ export default function Project() {
 
 	const markTaskAsComplete = (task: Task): void => {
 		const taskStatus: Status = "COMPLETE";
+        if(!placeholderProject.tasks) return;
+
 		const target = placeholderProject.tasks.find((t) => t.id === task.id);
 
 		if (!target)
@@ -69,6 +72,7 @@ export default function Project() {
 
 	const markTaskAsIncomplete = (task: Task): void => {
 		const taskStatus: Status = "INCOMPLETE";
+        if(!placeholderProject.tasks) return;
 		const target = placeholderProject.tasks.find((t) => t.id === task.id);
 
 		if (!target)
@@ -130,7 +134,7 @@ export default function Project() {
 					<header>
 						<h2 className="text-3xl mb-4">Tasks</h2>
 					</header>
-					{placeholderProject.tasks.length > 0 ? (
+					{placeholderProject.tasks && placeholderProject.tasks.length > 0 ? (
 						placeholderProject.tasks.map((task) => (
 							<div
 								className="flex flex-row justify-between items-center relative mb-4 border max-w-2xl p-4 rounded"
