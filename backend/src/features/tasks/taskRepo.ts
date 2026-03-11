@@ -38,9 +38,9 @@ export async function deleteById(id: string) {
 
 export async function getAllByProjectId(projectId: string): Promise<Task[]> {
     const result = await pool?.query(
-        `SELECT * FROM tasks WHERE project_id = $1;`,
+        `SELECT title, status, id FROM tasks WHERE project_id = $1;`,
         [projectId]
     );
 
-    return result?.rows[0];
+    return result?.rows as Task[];
 }
