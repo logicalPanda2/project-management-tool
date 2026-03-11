@@ -18,6 +18,8 @@ interface Project {
 
 interface ProjectComment {
 	title: string;
+    id: number;
+    userid: number;
 }
 
 interface ProjectMetadata {
