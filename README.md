@@ -33,27 +33,22 @@ TBA
 
 ## TODO
 
-### Frontend data flow
-1. Match frontend with backend types
-2. Add frontend type declarations to index.d.ts
-
 ### Extraction and refactors
-3. Extract hooks, primarily CRUD hooks
-4. Extract reusable components: buttons, inputs, forms, cards, rows, etc.
-5. Format and refactor
+1. Extract reusable components: buttons, inputs, forms, cards, rows, etc.
+2. Change project structure in frontend and API; separate tasks, comments, and metadata
 
 ### Integration
-6. Implement URL parameters in frontend to differentiate between creation and editing or split entirely
-7. Integrate API with frontend
+3. Implement URL parameters in frontend to differentiate between creation and editing
+4. Integrate API with frontend
 
 ### UI polish
-8. Completely rework design and choose a consistent theme
-9. Add shadows, transitions and other details for additional polish 
+5. Completely rework design and choose a consistent theme
+6. Add shadows, transitions and other details for additional polish 
 
 ### UX polish
-10. Add confirmation dialog box for deletion
-11. Add soft deletion and undo toasts for all delete actions
-12. Various other small details I most likely have missed but will find out in the process of building &semi;&rpar;
+7. Add confirmation dialog box for deletion
+8. Add soft deletion and undo toasts for all delete actions
+9. Various other small details I most likely have missed but will find out in the process of building &semi;&rpar;
 
 ## License
 <a href="./LICENSE.txt">MIT License</a>
