@@ -34,20 +34,20 @@ TBA
 ## TODO
 
 ### Frontend data flow
-1. Enable editing task status and removing task on CreateEdit page
-2. Move scattered frontend types to declaration file
+1. Match frontend with backend types
+2. Add frontend type declarations to index.d.ts
 
 ### Extraction and refactors
-3. Extract reusable components: buttons, inputs, forms, cards, rows, etc.
-4. Extract hooks, primarily CRUD hooks
+3. Extract hooks, primarily CRUD hooks
+4. Extract reusable components: buttons, inputs, forms, cards, rows, etc.
 5. Format and refactor
 
 ### Integration
-6. Integrate API with frontend
-7. Implement URL parameters in frontend
+6. Implement URL parameters in frontend to differentiate between creation and editing or split entirely
+7. Integrate API with frontend
 
 ### UI polish
-8. Apply a more colorful color palette
+8. Completely rework design and choose a consistent theme
 9. Add shadows, transitions and other details for additional polish 
 
 ### UX polish
