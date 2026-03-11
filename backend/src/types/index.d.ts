@@ -11,8 +11,8 @@ interface Project {
 	title: string;
 	description: string;
 	status: Status;
-	tasks: Task[];
-    comments: ProjectComment[];
+	tasks: Task[] | null;
+    comments: ProjectComment[] | null;
 	id: string;
 }
 

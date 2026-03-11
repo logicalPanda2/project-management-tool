@@ -12,8 +12,8 @@ export async function getFullProjectData(id: string): Promise<Project | null> {
 
     return {
         ...metadata,
-        comments: [...comments],
-        tasks: [...tasks],
+        comments: comments && comments.length !== 0 ? [...comments] : null,
+        tasks: tasks && tasks.length !== 0 ? [...tasks] : null,
         id: id,
     };
 }
