@@ -7,9 +7,13 @@ type User = {
 
 export default function CreateEdit() {
     const [title, setTitle] = useState<string>("");
+    const [titleErr, setTitleErr] = useState<string>("");
     const [description, setDescription] = useState<string>("");
+    const [descriptionErr, setDescriptionErr] = useState<string>("");
     const [tasks, setTasks] = useState<Task[]>([]);
+    const [taskErr, setTaskErr] = useState<string>("");
     const [userEmail, setUserEmail] = useState<string>("");
+    const [userErr, setUserErr] = useState<string>("");
     const [userEmails, setUserEmails] = useState<User[]>([]);
 
     const addNewTask = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
@@ -26,6 +30,12 @@ export default function CreateEdit() {
 
     const addUser = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
         e.preventDefault();
+        setUserErr("");
+
+        if(!userEmail.trim()) {
+            setUserErr("Cannot be empty");
+            return;
+        }
 
         setUserEmails([
             ...userEmails,
@@ -45,6 +55,31 @@ export default function CreateEdit() {
             ...userEmails.filter(u => u.id !== user.id),
         ]);
     }
+
+    const sendData = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+        e.preventDefault();
+
+        validate();
+    }
+
+    const validate = () => {
+        setTitleErr("");
+        setDescriptionErr("");
+        setTaskErr("");
+        setUserErr("");
+
+        if(!title.trim()) setTitleErr("Cannot be empty");
+        if(!description.trim()) setDescriptionErr("Cannot be empty");
+        tasks.forEach((task, i) => {
+            if(!task.title.trim()) setTaskErr(`All tasks must have a title. Check Task ${i + 1}`);
+        });
+
+        if(titleErr || descriptionErr || taskErr) {
+            return false;
+        }
+
+        return true;
+    }
     
     return (
         <form action="" className="max-w-xl">
@@ -55,7 +90,7 @@ export default function CreateEdit() {
                 <div className="flex flex-col gap-1 mb-4">
                     <label htmlFor="titleInput">TITLE</label>
                     <input 
-                        required
+                        
                         autoComplete="false"
                         type="text"
                         name="title"
@@ -65,11 +100,14 @@ export default function CreateEdit() {
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                     />
+                    {titleErr && <span className="mt-1 text-red-600">
+                        {titleErr}
+                    </span>}
                 </div>
                 <div className="flex flex-col gap-1">
                     <label htmlFor="descriptionInput">DESCRIPTION</label>
                     <input
-                        required
+                        
                         autoComplete="false"
                         type="text"
                         name="description"
@@ -79,6 +117,9 @@ export default function CreateEdit() {
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                     />
+                    {descriptionErr && <span className="mt-1 text-red-600">
+                        {descriptionErr}
+                    </span>}
                 </div>
             </section>
             <section className="mb-6">
@@ -86,11 +127,14 @@ export default function CreateEdit() {
                     <h2 className="text-2xl mb-4">Tasks</h2>
                 </header>
                 <button className="bg-black rounded text-white px-3 py-1.5 focus-visible:outline-0 focus-visible:bg-neutral-900 hover:bg-neutral-900 active:bg-neutral-800 transition mb-4" onClick={(e) => addNewTask(e)}>Add task</button>
+                {taskErr && <span className="mb-4 text-red-600 block">
+                        {taskErr}
+                    </span> }
                 {tasks.map((task, index) => {
                     return <div className="mb-4" key={task.id}>
                         <label htmlFor={task.id} className="mb-1 inline-block">{`Task ${index + 1}`}</label>
                         <input
-                            required
+                            
                             autoComplete="false"
                             type="text"
                             name={task.id}
@@ -112,9 +156,10 @@ export default function CreateEdit() {
                 <header>
                     <h2 className="text-2xl mb-4">Users</h2>
                 </header>
+                <div>
                 <div className="flex flex-row flex-nowrap items-center mb-4">
                     <input
-                        required
+                        
                         autoComplete="false"
                         type="text"
                         name="userEmail"
@@ -125,7 +170,12 @@ export default function CreateEdit() {
                         onChange={(e) => setUserEmail(e.target.value)}
                     />
                     <button className="bg-black rounded text-white hover:bg-neutral-900 focus-visible:outline-0 focus-visible:bg-neutral-900 active:bg-neutral-800 py-1 px-3 ml-4" onClick={(e) => addUser(e)}>Add</button>
+                    
                 </div>
+                {userErr && <span className="mb-4 text-red-600 block">
+                        {userErr}
+                    </span> }
+                    </div>
                 {userEmails.length > 0
                     ? userEmails.map((u) => (
                         <div className="flex flex-row flex-nowrap justify-between items-center mb-4 border max-w-2xl p-4 rounded" key={u.id}>
@@ -140,6 +190,7 @@ export default function CreateEdit() {
                 type="submit" 
                 value="Confirm"
                 className="bg-black text-white px-4 py-2 rounded focus-visible:outline-0 focus-visible:bg-neutral-900 hover:bg-neutral-900 active:bg-neutral-800 transition max-w-md w-full"
+                onClick={(e) => sendData(e)}
             />
         </form>
     );
