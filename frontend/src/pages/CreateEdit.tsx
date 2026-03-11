@@ -8,25 +8,18 @@ type User = {
 export default function CreateEdit() {
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
-    const [tasks, setTasks] = useState<FormTask[]>([]);
-    const [taskTitles, setTaskTitles] = useState<Record<string, string>>({});
+    const [tasks, setTasks] = useState<Task[]>([]);
     const [userEmail, setUserEmail] = useState<string>("");
     const [userEmails, setUserEmails] = useState<User[]>([]);
 
     const addNewTask = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
         e.preventDefault();
 
-        const newTask: FormTask = {
+        const newTask: Task = {
             title: `Task ${tasks.length + 1}`,
             status: "INCOMPLETE",
-            formName: `task${tasks.length + 1}`,
             id: crypto.randomUUID(),
         };
-
-        setTaskTitles({
-            ...taskTitles,
-            [`task${tasks.length + 1}`]: "",
-        });
 
         setTasks([...tasks, newTask]);
     }
@@ -93,22 +86,24 @@ export default function CreateEdit() {
                     <h2 className="text-2xl mb-4">Tasks</h2>
                 </header>
                 <button className="bg-black rounded text-white px-3 py-1.5 focus-visible:outline-0 focus-visible:bg-neutral-900 hover:bg-neutral-900 active:bg-neutral-800 transition mb-4" onClick={(e) => addNewTask(e)}>Add task</button>
-                {tasks.map((task) => {
-                    return <div className="mb-4" key={task.title}>
-                        <label htmlFor={task.formName} className="mb-1 inline-block">{task.title}</label>
+                {tasks.map((task, index) => {
+                    return <div className="mb-4" key={task.id}>
+                        <label htmlFor={task.id} className="mb-1 inline-block">{`Task ${index + 1}`}</label>
                         <input
                             required
                             autoComplete="false"
                             type="text"
-                            name={task.formName}
-                            id={task.formName}
+                            name={task.id}
+                            id={task.id}
                             placeholder="Title"
                             className="border rounded focus-visible:outline-1 px-4 py-2 max-w-xl w-full"
-                            value={taskTitles[`${task.formName}`]}
-                            onChange={(e) => {setTaskTitles({
-                                ...taskTitles,
-                                [`${task.formName}`]: e.target.value
-                            }); console.log(taskTitles)}}
+                            value={task.title}
+                            onChange={(e) => {setTasks([
+                                ...tasks.map(t => t.id === task.id ? {
+                                    ...task,
+                                    "title": e.target.value,
+                                } : t)
+                            ])}}
                         />
                     </div>
                 })}
