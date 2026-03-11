@@ -15,11 +15,11 @@ export default function CreateEdit() {
     const {
         add, 
         editStatus,
+        editTitle,
         remove,
         taskErr,
         tasks,
         setTaskErr,
-        setTasks
     } = useTasks();
 
 	const addUser = (
@@ -162,16 +162,8 @@ export default function CreateEdit() {
 								className="border rounded focus-visible:outline-1 px-4 py-2 max-w-xl w-full"
 								value={task.title}
 								onChange={(e) => {
-									setTasks([
-										...tasks.map((t) =>
-											t.id === task.id
-												? {
-														...task,
-														title: e.target.value,
-													}
-												: t,
-										),
-									]);
+									e.preventDefault();
+                                    editTitle(task, e.target.value);
 								}}
 							/>
                             <p className="mt-2">Status: {task.status}</p>

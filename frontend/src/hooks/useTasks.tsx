@@ -8,7 +8,7 @@ export default function useTasks() {
 		setTaskErr("");
 
 		const newTask: Task = {
-			title: `Task ${tasks.length + 1}`,
+			title: "",
 			status: "INCOMPLETE",
 			id: crypto.randomUUID(),
 		};
@@ -28,6 +28,17 @@ export default function useTasks() {
         } : t)]);
     }
 
+    const editTitle = (task: Task, title: string): void => {
+        setTasks([
+            ...tasks.map((t) =>t.id === task.id 
+                ? {
+                    ...task,
+                    title: title,
+                } : t
+            )
+        ]);
+    }
+
     const remove = (
         task: Task
     ): void => {
@@ -39,6 +50,7 @@ export default function useTasks() {
     return {
         add, 
         editStatus,
+        editTitle,
         remove,
         taskErr,
         setTaskErr,
