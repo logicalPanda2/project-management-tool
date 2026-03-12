@@ -29,5 +29,5 @@ interface User {
 interface ProjectComment {
 	user: string;
 	title: string;
-	id: number;
+	id: string;
 }
