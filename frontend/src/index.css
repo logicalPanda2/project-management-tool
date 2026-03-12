@@ -69,6 +69,7 @@
 @utility text-primary { color: var(--text-primary); }
 @utility text-secondary { color: var(--text-secondary); }
 @utility text-accent { color: var(--accent); }
+@utility stroke-accent { stroke: var(--accent); }
 @utility text-accent-dark { color: var(--accent-dark); }
 @utility text-danger { color: var(--danger); }
 @utility text-danger-dark { color: var(--danger-dark); }
