@@ -1,13 +1,13 @@
 import { useState } from "react";
 
 export default function Project() {
-	const [placeholderProject, setProject] = useState<Project>({
+	const placeholderProject = {
 		title: "Placeholder project",
 		description:
 			"this is just a placeholder, folks. Lorem ipsum dolor sit amet consectetur adipiscing elit.",
 		status: "INCOMPLETE",
 		id: crypto.randomUUID(),
-	}); 
+	};
     const [tasks, setTasks] = useState<Task[]>([
         {
             title: "Task 1",
