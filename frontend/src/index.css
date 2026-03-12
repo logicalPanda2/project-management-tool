@@ -1,1 +1,40 @@
 @import "tailwindcss";
+
+@property --angle {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 170deg;
+}
+
+*, 
+*::before, 
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg-default: oklch(93.637% 0.00469 258.621);
+    --bg-light: oklch(100% 0.00011 271.152);
+    --shadow-dark: oklch(83.162% 0.00657 255.711);
+    --shadow-light: oklch(95.514% 0.00011 271.152);
+    --text-primary: oklch(30.117% 0.00947 268.373);
+    --text-secondary: oklch(54.132% 0.01488 266.636);
+    --accent: oklch(62.505% 0.20107 266.356);
+    --accent-dark: oklch(53.312% 0.18149 265.856);
+    --danger: oklch(64.648% 0.1648 16.561);
+    --danger-dark: oklch(56.264% 0.15859 15.751);
+    --success: oklch(69.836% 0.14328 157.526);
+
+    --shadow-default: 
+        1px 1px 2px var(--shadow-dark),
+        -1px -1px 2px var(--shadow-light);
+    --shadow-pressed: 
+        inset 1px 1px 2px 0 var(--shadow-dark),
+        inset -1px -1px 2px 0 var(--shadow-light);
+
+    --sheen-light: oklch(96.996% 0.00298 264.793);
+    --sheen-dark:  oklch(90.326% 0.00596 264.652);
+    --angle:       170deg;
+}
