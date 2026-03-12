@@ -2,18 +2,12 @@
 // import useTasks from "../hooks/useTasks";
 // import useUserEmails from "../hooks/useUserEmails";
 
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 export default function ProjectEdit() {
     const params = useParams();
-    const navigateTo = useNavigate();
 
-    if(
-        !("id" in params) ||
-        typeof params.id !== "string"
-    ) {
-        navigateTo("/404");
-    }
+    if(!("id" in params)) return <p>Creating new project now.</p>;
 
     return <p>Hello! EDITIGN project with id = {params.id} now.</p>;
 }

@@ -19,7 +19,7 @@ export default function Root() {
 						</li>
 						<li>
 							<Link
-								to={"/create"}
+								to={"/project/new"}
 								className="bg-black rounded text-white px-4 py-1.5 focus-visible:outline-0 focus-visible:bg-neutral-900 hover:bg-neutral-900 active:bg-neutral-800 transition"
 							>
 								New
