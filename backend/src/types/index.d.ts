@@ -1,50 +1,34 @@
-type Status = "COMPLETE" | "INCOMPLETE";
-type UserRole = "CONTRIBUTOR" | "CREATOR";
-
+// PROJECTS
+type Status = "COMPLETE" | "INCOMPLETE"
+interface Project {
+	title: string;
+	description: string;
+	status: Status;
+	id: string;
+}
 interface Task {
 	title: string;
 	status: Status;
 	id: string;
 }
-
-interface Project {
-	title: string;
-	description: string;
-	status: Status;
-	tasks: Task[] | null;
-	comments: ProjectComment[] | null;
-	id: string;
-}
-
 interface ProjectComment {
 	title: string;
-    id: number;
+	id: string;
     user: string;
 }
 
-interface ProjectMetadata {
-	title: string;
-	description: string;
-	status: Status;
+// USERS
+interface UserConfidentialData {
+	email: string;
+	password: string;
 	id: string;
 }
-
 interface User {
 	email: string;
-	password: string;
-	id: string;
+    id: string;
 }
 
-interface SentUserData {
-	email: string;
-	password: string;
-}
-
-interface DecodedUserData {
-	id: string;
-	email: string;
-}
-
+// ERRORS
 interface HttpError extends Error {
 	status: number;
 }

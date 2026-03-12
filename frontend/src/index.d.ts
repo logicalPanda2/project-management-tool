@@ -12,9 +12,9 @@ interface Task {
 	id: string;
 }
 interface ProjectComment {
-	user: string;
 	title: string;
 	id: string;
+    user: string;
 }
 
 // USERS
