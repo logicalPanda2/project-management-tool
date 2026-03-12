@@ -94,7 +94,7 @@
     background: linear-gradient(var(--angle), var(--sheen-light) 0%, var(--sheen-dark) 100%);
 }
 @utility bg-gradient-pressed {
-    --angle: 220deg;
+    --angle: 350deg;
 }
 
 @utility bg-gradient-dark {
@@ -106,5 +106,5 @@
 }
 
 @utility transition-custom-all {
-    transition: box-shadow 160ms ease, transform 120ms ease, color 120ms ease, --angle 200ms ease, --percent 200ms ease, --percent-2 200ms ease;
+    transition: box-shadow 160ms ease, transform 120ms ease, color 120ms ease, --angle 60ms ease, --percent 200ms ease, --percent-2 200ms ease;
 }
