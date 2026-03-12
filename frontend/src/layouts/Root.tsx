@@ -10,20 +10,24 @@ export default function Root() {
 				<nav className="border-t-neutral-400 border-t md:border-0 pt-6 md:pt-0">
 					<ul className="flex flex-row flex-nowrap items-center gap-4 md:gap-8">
 						<li>
-							<Link
-								to={"/"}
-								className="bg-gradient shadow-default text-primary px-4 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all"
-							>
-								Home
-							</Link>
+                            <div className="hover:transform-[translateY(-1px)] transition-custom-all w-fit">
+                                <Link
+                                    to={"/"}
+                                    className="bg-gradient shadow-default text-primary px-4 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-secondary"
+                                >
+                                    Home
+                                </Link>
+                            </div>
 						</li>
 						<li>
-							<Link
-								to={"/project/new"}
-								className="bg-gradient shadow-default text-primary px-4 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all"
-							>
-								New
-							</Link>
+                            <div className="hover:transform-[translateY(-1px)] transition-custom-all w-fit">
+                                <Link
+                                    to={"/project/new"}
+                                    className="bg-gradient shadow-default text-primary px-4 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-secondary"
+                                >
+                                    New
+                                </Link>
+                            </div>
 						</li>
 					</ul>
 				</nav>
