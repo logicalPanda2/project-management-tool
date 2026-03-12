@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-export default function useTasks() {
-	const [tasks, setTasks] = useState<Task[]>([]);
+export default function useTasks(initial: Task[] = []) {
+	const [tasks, setTasks] = useState<Task[]>(initial);
 	const [taskErr, setTaskErr] = useState<string>("");
 
 	const add = (): void => {
