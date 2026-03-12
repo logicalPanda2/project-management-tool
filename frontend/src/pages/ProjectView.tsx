@@ -1,18 +1,13 @@
 // import { useState } from "react";
 // import useTasks from "../hooks/useTasks";
 
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import NotFound from "./NotFound";
 
 export default function ProjectView() {
     const params = useParams();
-    const navigateTo = useNavigate();
 
-    if(
-        !("id" in params) ||
-        typeof params.id !== "string"
-    ) {
-        navigateTo("/404");
-    }
+    if(!("id" in params)) return <NotFound />;
 
     return <p>Hello! Viewing project with id = {params.id} now.</p>;
 }
