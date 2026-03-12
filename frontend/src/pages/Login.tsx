@@ -1,8 +1,29 @@
 import { useState } from "react";
+import validateEmail from "../utils/validateEmail";
 
 export default function Login() {
 	const [email, setEmail] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
+    const [emailErr, setEmailErr] = useState<string>("");
+    const [passwordErr, setPasswordErr] = useState<string>("");
+
+    const validate = (): boolean => {
+        setEmailErr("");
+        setPasswordErr("");
+
+        if(!email.trim()) 
+            setEmailErr("Email cannot be empty");
+        
+        if(email.trim() && !validateEmail(email)) 
+            setEmailErr("Invalid email pattern");
+
+        if(!password.trim())
+            setPasswordErr("Password cannot be empty");
+
+        if(emailErr || passwordErr) return false;
+
+        return true;
+    }
 
 	return (
 		<div className="flex justify-center items-center md:min-h-screen min-h-[75vh] bg-default">
@@ -23,8 +44,15 @@ export default function Login() {
 							id="emailInput"
 							className="text-primary bg-gradient rounded-lg px-4 py-2 shadow-default focus-visible:shadow-pressed focus-visible:outline-0 transition-custom-all"
 							value={email}
-							onChange={(e) => setEmail(e.target.value)}
+							onChange={(e) => {
+                                if(email.trim() && emailErr !== "Invalid email pattern") setEmailErr("");
+                                if(validateEmail(email) && emailErr !== "Email cannot be empty") setEmailErr("");
+                                setEmail(e.target.value);
+                            }}
 						/>
+                        {emailErr && <span className="text-sm text-danger-dark">
+                            {emailErr}
+                        </span>}
 					</div>
 					<div className="flex flex-col gap-1">
 						<label htmlFor="passwordInput" className="text-primary">Password</label>
@@ -36,13 +64,23 @@ export default function Login() {
 							id="passwordInput"
 							className="text-primary bg-gradient rounded-lg px-4 py-2 shadow-default focus-visible:shadow-pressed focus-visible:outline-0 transition-custom-all"
 							value={password}
-							onChange={(e) => setPassword(e.target.value)}
+							onChange={(e) => {
+                                if(password.trim()) setPasswordErr("");
+                                setPassword(e.target.value)
+                            }}
 						/>
+                        {passwordErr && <span className="text-sm text-danger-dark">
+                            {passwordErr}
+                        </span>}
 					</div>
 					<input
 						type="submit"
 						value="Submit"
-						className="bg-gradient-dark text-light px-4 py-2 rounded-lg shadow-default-dark hover:shadow-hover-dark active:bg-gradient-dark-pressed transition-custom-all"
+						className="bg-gradient-dark text-light px-4 py-2 rounded-lg shadow-default-dark hover:shadow-hover-dark active:bg-gradient-dark-pressed transition-custom-all focus-visible:bg-gradient-dark-pressed focus-visible:outline-0"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            validate();
+                        }}
 					/>
 				</form>
 			</main>
