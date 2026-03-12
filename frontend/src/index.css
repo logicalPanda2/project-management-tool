@@ -13,7 +13,8 @@
 }
 
 :root {
-    --bg-dark: oklch(20.394% 0.00255 248.163);
+    --bg-black: oklch(0% 0 0);
+    --bg-dark: oklch(30.418% 0.00143 198.414);
     --bg-default: oklch(93.637% 0.00469 258.621);
     --bg-light: oklch(100% 0.00011 271.152);
     --shadow-dark: oklch(83.162% 0.00657 255.711);
@@ -56,5 +57,10 @@
 
 @utility bg-gradient { 
     background: linear-gradient(var(--angle), var(--sheen-light) 0%, var(--sheen-dark) 100%);
+    transition: box-shadow 160ms ease, transform 120ms ease, color 120ms ease, --angle 50ms ease;
+}
+
+@utility bg-gradient-dark {
+    background: linear-gradient(var(--angle), var(--bg-dark) 0%, var(--bg-black) 100%);
     transition: box-shadow 160ms ease, transform 120ms ease, color 120ms ease, --angle 50ms ease;
 }
