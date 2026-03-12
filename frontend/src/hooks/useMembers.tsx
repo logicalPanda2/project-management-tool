@@ -1,7 +1,6 @@
 import { useState } from "react";
 
-export default function useMembers(initialEmails: User[] = [], memberCount: number = 0) {
-	const [count, setCount] = useState<number>(memberCount);
+export default function useMembers(initialEmails: User[] = []) {
 	const [emails, setEmails] = useState<User[]>(initialEmails);
 
 	const add = (email: string): void => {
@@ -9,11 +8,9 @@ export default function useMembers(initialEmails: User[] = [], memberCount: numb
 			...emails,
 			{
 				email: email,
-				id: count,
+				id: crypto.randomUUID(),
 			},
 		]);
-
-		setCount((c) => c + 1);
 	};
 
 	const edit = (user: User, email: string): void => {

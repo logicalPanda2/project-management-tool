@@ -3,9 +3,9 @@ import { useState } from "react";
 export default function useComments(initial: ProjectComment[] = []) {
     const [list, setList] = useState<ProjectComment[]>(initial);
 
-	const post = (content: string): void => {
+	const post = (user: string, content: string): void => {
         const newComment = {
-            user: "User 1",
+            user: user,
             title: content,
             id: crypto.randomUUID(),
         };

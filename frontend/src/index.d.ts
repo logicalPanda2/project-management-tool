@@ -23,7 +23,7 @@ interface ProjectMetadata {
 
 interface User {
 	email: string;
-	id: number;
+	id: string;
 }
 
 interface ProjectComment {
