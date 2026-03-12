@@ -7,6 +7,7 @@ export default function ProjectEdit() {
     const params = useParams();
 
     if(!("id" in params)) return <p>Project Creation Placeholder</p>;
+    // if there is no id, return as is. if there is an id, populate hooks with fetched project data from (project(params.id));
     
 	const formData = useFormData();
 	const tasks = useTasks();
