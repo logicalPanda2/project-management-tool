@@ -2,11 +2,8 @@ import { useState } from "react";
 
 export default function useTasks(initial: Task[] = []) {
 	const [list, setList] = useState<Task[]>(initial);
-	const [taskErr, setTaskErr] = useState<string>("");
 
 	const add = (): void => {
-		setTaskErr("");
-
 		const newTask: Task = {
 			title: "",
 			status: "INCOMPLETE",
@@ -17,8 +14,6 @@ export default function useTasks(initial: Task[] = []) {
 	};
 
 	const editStatus = (task: Task, status: Status): void => {
-		setTaskErr("");
-
 		setList([
 			...list.map((t) =>
 				t.id === task.id
@@ -45,8 +40,6 @@ export default function useTasks(initial: Task[] = []) {
 	};
 
 	const remove = (task: Task): void => {
-		setTaskErr("");
-
 		setList([...list.filter((t) => t.id !== task.id)]);
 	};
 
@@ -55,8 +48,6 @@ export default function useTasks(initial: Task[] = []) {
 		editStatus,
 		editTitle,
 		remove,
-		taskErr,
-		setTaskErr,
 		list,
 	};
 }
