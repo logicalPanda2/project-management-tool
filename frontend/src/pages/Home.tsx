@@ -7,27 +7,10 @@ export default function Home() {
 			description:
 				"this is just a placeholder, folks. Lorem ipsum dolor sit amet consectetur adipiscing elit.",
 			status: "INCOMPLETE",
-			tasks: [
-				{
-					title: "Task 1",
-					status: "INCOMPLETE",
-					id: crypto.randomUUID(),
-				},
-				{
-					title: "Task 2",
-					status: "INCOMPLETE",
-					id: crypto.randomUUID(),
-				},
-				{
-					title: "Task 3",
-					status: "INCOMPLETE",
-					id: crypto.randomUUID(),
-				},
-			],
-			comments: null,
 			id: crypto.randomUUID(),
 		},
-	]; // some role based API fetch that gets all projects
+	];
+    // some role based API fetch that gets all projects
 
 	return projects.length > 0 ? (
 		projects.map((project) => (

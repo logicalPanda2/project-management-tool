@@ -6,26 +6,25 @@ export default function Project() {
 		description:
 			"this is just a placeholder, folks. Lorem ipsum dolor sit amet consectetur adipiscing elit.",
 		status: "INCOMPLETE",
-		tasks: [
-			{
-				title: "Task 1",
-				status: "INCOMPLETE",
-				id: crypto.randomUUID(),
-			},
-			{
-				title: "Task 2",
-				status: "INCOMPLETE",
-				id: crypto.randomUUID(),
-			},
-			{
-				title: "Task 3",
-				status: "INCOMPLETE",
-				id: crypto.randomUUID(),
-			},
-		],
-		comments: null,
 		id: crypto.randomUUID(),
-	}); // will be replaced by fetch based on parameters
+	}); 
+    const [tasks, setTasks] = useState<Task[]>([
+        {
+            title: "Task 1",
+            status: "INCOMPLETE",
+            id: crypto.randomUUID(),
+        },
+        {
+            title: "Task 2",
+            status: "INCOMPLETE",
+            id: crypto.randomUUID(),
+        },
+        {
+            title: "Task 3",
+            status: "INCOMPLETE",
+            id: crypto.randomUUID(),
+        },
+    ]);
 	const [comments, setComments] = useState<ProjectComment[]>([
 		{
 			user: "User 1",
@@ -42,9 +41,9 @@ export default function Project() {
 
 	const markTaskAsComplete = (task: Task): void => {
 		const taskStatus: Status = "COMPLETE";
-		if (!placeholderProject.tasks) return;
+		if (!tasks) return;
 
-		const target = placeholderProject.tasks.find((t) => t.id === task.id);
+		const target = tasks.find((t) => t.id === task.id);
 
 		if (!target)
 			throw new Error("Cannot mark as complete; task not found.");
@@ -54,20 +53,13 @@ export default function Project() {
 			status: taskStatus,
 		};
 
-		const copy = [...placeholderProject.tasks];
-
-		const newTasks = copy.map((t) => (t.id === task.id ? newTask : t));
-
-		setProject({
-			...placeholderProject,
-			tasks: newTasks,
-		});
+		setTasks([...tasks.map((t) => (t.id === task.id ? newTask : t))]);
 	};
 
 	const markTaskAsIncomplete = (task: Task): void => {
 		const taskStatus: Status = "INCOMPLETE";
-		if (!placeholderProject.tasks) return;
-		const target = placeholderProject.tasks.find((t) => t.id === task.id);
+		if (!tasks) return;
+		const target = tasks.find((t) => t.id === task.id);
 
 		if (!target)
 			throw new Error("Cannot mark as incomplete; task not found.");
@@ -77,14 +69,7 @@ export default function Project() {
 			status: taskStatus,
 		};
 
-		const copy = [...placeholderProject.tasks];
-
-		const newTasks = copy.map((t) => (t.id === task.id ? newTask : t));
-
-		setProject({
-			...placeholderProject,
-			tasks: newTasks,
-		});
+		setTasks([...tasks.map((t) => (t.id === task.id ? newTask : t))]);
 	};
 
 	const postComment = (): void => {
@@ -128,9 +113,9 @@ export default function Project() {
 					<header>
 						<h2 className="text-3xl mb-4">Tasks</h2>
 					</header>
-					{placeholderProject.tasks &&
-					placeholderProject.tasks.length > 0 ? (
-						placeholderProject.tasks.map((task) => (
+					{tasks &&
+					tasks.length > 0 ? (
+						tasks.map((task) => (
 							<div
 								className="flex flex-row justify-between items-center relative mb-4 border max-w-2xl p-4 rounded"
 								key={task.id}
