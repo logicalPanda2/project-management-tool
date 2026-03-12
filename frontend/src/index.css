@@ -37,20 +37,20 @@
     --angle:       170deg;
 }
 
-.bg-default { background-color: var(--bg-default); }
-.bg-light { background-color: var(--bg-light); }
-.text-primary { color: var(--text-primary); }
-.text-secondary { color: var(--text-secondary); }
-.text-accent { color: var(--accent); }
-.text-accent-dark { color: var(--accent-dark); }
-.text-danger { color: var(--danger); }
-.text-danger-dark { color: var(--danger-dark); }
-.text-success { color: var(--success); }
+@utility bg-default { background-color: var(--bg-default); }
+@utility bg-light { background-color: var(--bg-light); }
+@utility text-primary { color: var(--text-primary); }
+@utility text-secondary { color: var(--text-secondary); }
+@utility text-accent { color: var(--accent); }
+@utility text-accent-dark { color: var(--accent-dark); }
+@utility text-danger { color: var(--danger); }
+@utility text-danger-dark { color: var(--danger-dark); }
+@utility text-success { color: var(--success); }
 
-.shadow-default { box-shadow: var(--shadow-default); }
-.shadow-pressed { box-shadow: var(--shadow-pressed); }
+@utility shadow-default { box-shadow: var(--shadow-default); }
+@utility shadow-pressed { box-shadow: var(--shadow-pressed); }
 
-.bg-gradient { 
+@utility bg-gradient { 
     background: linear-gradient(var(--angle), var(--sheen-light) 0%, var(--sheen-dark) 100%);
     transition: box-shadow 160ms ease, transform 120ms ease, color 120ms ease, --angle 50ms ease;
 }
