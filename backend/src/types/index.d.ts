@@ -18,6 +18,7 @@ interface ProjectComment {
 }
 
 // USERS
+type UserRole = "CREATOR" | "CONTRIBUTOR";
 interface UserConfidentialData {
 	email: string;
 	password: string;

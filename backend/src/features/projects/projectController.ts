@@ -13,7 +13,7 @@ export async function getAll(
 		const user = req.user;
 		if (!user) return res.sendStatus(401);
 
-		const projects: ProjectMetadata[] = await projectRepo.getAllByUserId(
+		const projects: Project[] = await projectRepo.getAllByUserId(
 			user.id,
 		);
 
