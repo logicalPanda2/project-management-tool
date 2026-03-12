@@ -2,22 +2,15 @@ import { useState } from "react";
 
 export default function useComments(initial: ProjectComment[] = []) {
     const [list, setList] = useState<ProjectComment[]>(initial);
-	const [commentField, setCommentField] = useState<string>("");
-    const [commentFieldErr, setCommentFieldErr] = useState<string>("");
 
-	const post = (): void => {
-        setCommentFieldErr("");
-
-        if(!commentField.trim()) setCommentFieldErr("Cannot be empty");
-
+	const post = (content: string): void => {
         const newComment = {
             user: "User 1",
-            title: commentField,
+            title: content,
             id: crypto.randomUUID(),
         };
 
 		setList([...list, newComment]);
-		setCommentField("");
 	};
 
 	const remove = (comment: ProjectComment): void => {
@@ -26,10 +19,6 @@ export default function useComments(initial: ProjectComment[] = []) {
 
     return {
         list,
-        commentField,
-        setCommentField,
-        commentFieldErr,
-        setCommentFieldErr,
         post,
         remove,
     };
