@@ -28,7 +28,7 @@ export default function Home() {
 					.
 				</p>
 				<Link
-					to={"project"}
+					to={`project/${project.id}`}
 					className="bg-black text-white rounded focus-visible:outline-0 focus-visible:bg-neutral-900 hover:bg-neutral-900 active:bg-neutral-800 px-3 py-1"
 				>
 					View
