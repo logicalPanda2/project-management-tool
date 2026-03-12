@@ -34,12 +34,17 @@ TBA
 ## TODO
 
 ### Extraction and refactors
-1. Extract reusable components: buttons, inputs, forms, cards, rows, etc.
-2. Change project structure in frontend and API; separate tasks, comments, and metadata
+1. Extract task hooks in home page
+2. Extract reusable components: buttons, inputs, forms, cards, rows, etc.
+3. Do a final type check pass for both frontend and backend
 
 ### Integration
-3. Implement URL parameters in frontend to differentiate between creation and editing
-4. Integrate API with frontend
+4. Integrate API with frontend:
+    1. Add all project fetches for homepage
+    2. Navigate to Project/:id for project click on homepage
+    3. Navigate to CreateEdit/:id for edit button click
+    4. Send data to API at creation
+    5. Auth
 
 ### UI polish
 5. Completely rework design and choose a consistent theme
