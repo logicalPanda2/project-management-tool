@@ -88,15 +88,18 @@
 @utility bg-gradient { 
     background: linear-gradient(var(--angle), var(--sheen-light) 0%, var(--sheen-dark) 100%);
 }
+@utility bg-gradient-pressed {
+    --angle: 220deg;
+}
 
 @utility bg-gradient-dark {
     background: linear-gradient(var(--angle), var(--bg-dark) var(--percent), var(--bg-black) var(--percent-2));
 }
 @utility bg-gradient-dark-pressed {
-    --percent: 15%;
-    --percent-2: 100%;
+    --percent: 35%;
+    --percent-2: 120%;
 }
 
 @utility transition-custom-all {
-    transition: box-shadow 160ms ease, transform 120ms ease, color 120ms ease, --angle 50ms ease, --percent 200ms ease, --percent-2 200ms ease;
+    transition: box-shadow 160ms ease, transform 120ms ease, color 120ms ease, --angle 200ms ease, --percent 200ms ease, --percent-2 200ms ease;
 }
