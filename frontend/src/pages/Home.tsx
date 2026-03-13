@@ -41,16 +41,17 @@ export default function Home() {
 		))
 	) : (
 		<>
-			<p className="text-center text-2xl text-neutral-900 mb-2">
+			<p className="text-center text-2xl text-primary mb-6">
 				There are no projects yet.
 			</p>
-			<p className="relative text-center text-xl text-neutral-900">
-				Create a new project by clicking the{" "}
-				<span className="relative bottom-0.75 text-xs bg-black text-white rounded px-2.5 py-1">
-					New
-				</span>{" "}
-				button!
-			</p>
+			<div className="self-center hover:transform-[translateY(-1px)] transition-custom-all w-fit">
+                <Link
+                    to={"/project/new"}
+                    className="bg-gradient shadow-default text-primary px-4 py-2 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-secondary"
+                >
+                    New project
+                </Link>
+            </div>
 		</>
 	);
 }
