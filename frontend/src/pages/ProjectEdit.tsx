@@ -218,7 +218,7 @@ export default function ProjectEdit() {
 						</button>
 					</div>
 					{formData.emailFieldErr && (
-						<span className="text-sm text-danger-dark mb-5 inline-block">
+						<span className={`text-sm text-danger-dark inline-block ${members.emails.length ? "mb-5" : "mb-0"}`}>
 							{formData.emailFieldErr}
 						</span>
 					)}
