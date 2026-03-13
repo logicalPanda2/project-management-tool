@@ -138,7 +138,7 @@ export default function ProjectView() {
 							</div>
 						))
 					) : (
-						<p className="text-xl text-neutral-900">
+						<p className="text-lg text-secondary">
 							There are no comments yet.
 						</p>
 					)}
