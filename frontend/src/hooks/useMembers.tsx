@@ -5,11 +5,11 @@ export default function useMembers(initialEmails: User[] = []) {
 
 	const add = (email: string): void => {
 		setEmails([
-			...emails,
-			{
+            {
 				email: email,
 				id: crypto.randomUUID(),
 			},
+			...emails,
 		]);
 	};
 
