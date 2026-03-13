@@ -1,7 +1,7 @@
 import useFormData from "../hooks/useFormData";
 import useTasks from "../hooks/useTasks";
 import useMembers from "../hooks/useMembers";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import validateEmail from "../utils/validateEmail";
 // import { useParams } from "react-router-dom";
 
@@ -15,6 +15,7 @@ export default function ProjectEdit() {
 	const formData = useFormData();
 	const tasks = useTasks();
 	const members = useMembers();
+    const [projectStatus, setProjectStatus] = useState<Status>("INCOMPLETE");
     const isEditing = false;
 
 	const sendData = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -144,6 +145,24 @@ export default function ProjectEdit() {
 						</span>
 					)}
 				</div>
+                {isEditing && <div className="mt-6 justify-between flex flex-row flex-nowrap items-center">
+                    <button
+                        className="bg-gradient shadow-default px-3 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-success-dark hover:transform-[translateY(-1px)] text-success font-semibold stroke-success hover:stroke-success-dark"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            setProjectStatus(projectStatus === "INCOMPLETE" ? "COMPLETE" : "INCOMPLETE");
+                        }}
+                    >
+                        <svg className="fill-none stroke-inherit stroke-[1.5px] inline-block w-4 mr-2 mb-0.5" viewBox="0 0 24 24">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        Finish project
+                    </button>
+                    <p className={`flex flex-row flex-nowrap items-center rounded-xl font-semibold text-md shadow-pressed bg-gradient px-3 py-0.5 ${projectStatus === "INCOMPLETE" ? "text-neutral-800/50" : "text-success"}`}>
+                        <span className={`rounded-full w-2 h-2 inline-block mr-2 ${projectStatus === "INCOMPLETE" ? "bg-neutral-800/40" : "bg-text-success"}`}></span>
+                        {projectStatus}
+                    </p>
+                </div>}
 			</section>
 			<section className="mb-10">
 				<header>

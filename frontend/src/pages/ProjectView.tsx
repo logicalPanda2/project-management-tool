@@ -10,13 +10,13 @@ export default function ProjectView() {
     if(!("id" in params)) return <NotFound />;
 
     // replace all data below with a fetch for project(params.id)
-	const project = {
+	const [project, setProject] = useState({
         title: "Placeholder project",
         description:
             "this is just a placeholder, folks. Lorem ipsum dolor sit amet consectetur adipiscing elit. Adipiscing elit. Longer description, act like this is important. This is definitely important.",
         status: "INCOMPLETE",
         id: crypto.randomUUID(),
-    };
+    });
     const tasks = useTasks([
         {
             title: "This is a very very long text title made for the purposes of testing the wrapping capability of the task card.",
@@ -71,6 +71,18 @@ export default function ProjectView() {
 					<p className="text-xl max-w-2xl text-secondary">
 						{project.description}
 					</p>
+                    <button
+                        className="bg-gradient shadow-default px-3 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-success-dark hover:transform-[translateY(-1px)] text-success font-semibold stroke-success hover:stroke-success-dark mt-4"
+                        onClick={() => setProject({
+                            ...project,
+                            status: project.status === "INCOMPLETE" ? "COMPLETE" : "INCOMPLETE",
+                        })}
+                    >
+                        <svg className="fill-none stroke-inherit stroke-[1.5px] inline-block w-4 mr-2 mb-0.5" viewBox="0 0 24 24">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        Finish project
+                    </button>
 				</section>
 				<section className="mb-10">
 					<header>
