@@ -19,7 +19,7 @@ export default function ProjectView() {
     };
     const tasks = useTasks([
         {
-            title: "Task 1",
+            title: "This is a very very long text title made for the purposes of testing the wrapping capability of the task card.",
             status: "INCOMPLETE",
             id: crypto.randomUUID(),
         },
@@ -80,32 +80,27 @@ export default function ProjectView() {
 					tasks.list.length > 0 ? (
 						tasks.list.map((t) => (
 							<div
-								className="flex flex-row justify-between items-center relative mb-4 border max-w-2xl p-4 rounded"
+								className="flex flex-col justify-between items-start relative mb-4 max-w-lg p-4 rounded-lg bg-default shadow-default"
 								key={t.id}
 							>
-								<p className="text-xl ml-2">{t.title}</p>
-								{t.status === "INCOMPLETE" ? (
-									<button
-										className="mr-2 px-2 py-0.5 bg-black rounded text-white hover:bg-neutral-900 focus-visible:outline-0 focus-visible:bg-neutral-900 active:bg-neutral-800"
-										onClick={() => tasks.editStatus(t, "COMPLETE")}
-									>
-										Mark as done
-									</button>
-								) : (
-									<div>
-										<p className="mr-4 inline-block">
-											Complete
-										</p>
-										<button
-											className="mr-2 px-2 py-0.5 bg-black rounded text-white hover:bg-neutral-900 focus-visible:outline-0 focus-visible:bg-neutral-900 active:bg-neutral-800"
-											onClick={() =>
-												tasks.editStatus(t, "INCOMPLETE")
-											}
-										>
-											Revert
-										</button>
-									</div>
-								)}
+								<div className="flex sm:flex-row flex-col justify-between w-full items-start flex-nowrap mb-8 sm:mb-8 gap-4 sm:gap-0">
+                                    <p className="text-primary text-lg max-w-full sm:max-w-2/3">
+                                        {t.title}
+                                    </p>
+                                    <p className={`flex flex-row flex-nowrap items-center rounded-xl font-semibold text-[13px] shadow-pressed bg-gradient px-2.5 py-[2.5px] ${t.status === "INCOMPLETE" ? "text-neutral-800/50" : "text-success"}`}>
+                                        <span className={`rounded-full w-1.5 h-1.5 inline-block mr-2 ${t.status === "INCOMPLETE" ? "bg-neutral-800/40" : "bg-text-success"}`}></span>
+                                        {t.status}
+                                    </p>
+                                </div>
+                                <button
+                                    className="bg-gradient shadow-default px-3 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-success-dark hover:transform-[translateY(-1px)] text-success text-sm font-semibold stroke-success hover:stroke-success-dark"
+                                    onClick={() => tasks.editStatus(t, t.status === "COMPLETE" ? "INCOMPLETE" : "COMPLETE")}
+                                >
+                                    <svg className="fill-none stroke-inherit stroke-[1.5px] inline-block w-4 mr-2 mb-0.5" viewBox="0 0 24 24">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                    Done
+                                </button>
 							</div>
 						))
 					) : (

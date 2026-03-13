@@ -37,6 +37,7 @@
     --danger: oklch(64.648% 0.1648 16.561);
     --danger-dark: oklch(56.264% 0.15859 15.751);
     --success: oklch(69.836% 0.14328 157.526);
+    --success-dark: oklch(59.473% 0.1383 155.255);
 
     --shadow-default: 
         1px 1px 2px var(--shadow-dark),
@@ -73,10 +74,13 @@
 @utility text-accent { color: var(--accent); }
 @utility outline-accent { outline-color: var(--accent-dark); }
 @utility stroke-accent { stroke: var(--accent); }
+@utility stroke-success { stroke: var(--success); }
+@utility stroke-success-dark { stroke: var(--success-dark); }
 @utility text-accent-dark { color: var(--accent-dark); }
 @utility text-danger { color: var(--danger); }
 @utility text-danger-dark { color: var(--danger-dark); }
 @utility text-success { color: var(--success); }
+@utility text-success-dark { color: var(--success-dark); }
 @utility bg-text-success { background-color: var(--success); }
 
 @utility shadow-default { box-shadow: var(--shadow-default); }
