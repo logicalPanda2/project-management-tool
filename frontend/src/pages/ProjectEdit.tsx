@@ -34,47 +34,47 @@ export default function ProjectEdit() {
 		if (!formData.title.trim()) formData.setTitleErr("Cannot be empty");
 		if (!formData.description.trim()) formData.setDescriptionErr("Cannot be empty");
 
-        const _errString1 = "Title of task";
-        const _errArray: string[] = [];
-        const _errString3 = "cannot be empty";
+        const taskErrString = "Title of task";
+        const taskErrArray: string[] = [];
+        const taskErrString2 = "cannot be empty";
 		tasks.list.forEach((t, i) => {
 			if (!t.title.trim())
-				_errArray.push(`${i + 1}`);
+				taskErrArray.push(`${i + 1}`);
 
-            if(i === tasks.list.length - 1 && _errArray.length) {
-                switch(_errArray.length) {
+            if(i === tasks.list.length - 1 && taskErrArray.length) {
+                switch(taskErrArray.length) {
                     case 1:
-                        formData.setTaskFieldErr(`${_errString1} ${_errArray[0]} ${_errString3}`);
+                        formData.setTaskFieldErr(`${taskErrString} ${taskErrArray[0]} ${taskErrString2}`);
                         break;
                     case 2:
-                        formData.setTaskFieldErr(`${_errString1} ${_errArray[0]} and ${_errArray[1]} ${_errString3}`);
+                        formData.setTaskFieldErr(`${taskErrString} ${taskErrArray[0]} and ${taskErrArray[1]} ${taskErrString2}`);
                         break;
                     default:
                         formData.setTaskFieldErr(
-                            `${_errString1} ${_errArray.slice(0, _errArray.length - 1).join(", ").concat(` and ${_errArray[_errArray.length - 1]}`)} ${_errString3}`
+                            `${taskErrString} ${taskErrArray.slice(0, taskErrArray.length - 1).join(", ").concat(` and ${taskErrArray[taskErrArray.length - 1]}`)} ${taskErrString2}`
                         );
                 }
             }
 		});
 
-        const errString1 = "Email";
-        const errArray: string[] = [];
-        const errString3 = "has an invalid pattern";
+        const emailErrString = "Email";
+        const emailErrArray: string[] = [];
+        const emailErrString2 = "has an invalid pattern";
         members.emails.forEach((m, i) => {
             if(!validateEmail(m.email))
-                errArray.push(`${i + 1}`);
+                emailErrArray.push(`${i + 1}`);
 
-            if(i === members.emails.length - 1 && errArray.length) {
-                switch(errArray.length) {
+            if(i === members.emails.length - 1 && emailErrArray.length) {
+                switch(emailErrArray.length) {
                     case 1: 
-                        formData.setEmailFieldErr(`${errString1} ${errArray[0]} ${errString3}`);
+                        formData.setEmailFieldErr(`${emailErrString} ${emailErrArray[0]} ${emailErrString2}`);
                         break;
                     case 2:
-                        formData.setEmailFieldErr(`${errString1} ${errArray[0]} and ${errArray[1]} ${errString3}`);
+                        formData.setEmailFieldErr(`${emailErrString} ${emailErrArray[0]} and ${emailErrArray[1]} ${emailErrString2}`);
                         break;
                     default:
                         formData.setEmailFieldErr(
-                            `${errString1} ${errArray.slice(0, errArray.length - 1).join(", ").concat(` and ${errArray[errArray.length - 1]}`)} ${errString3}`
+                            `${emailErrString} ${emailErrArray.slice(0, emailErrArray.length - 1).join(", ").concat(` and ${emailErrArray[emailErrArray.length - 1]}`)} ${emailErrString2}`
                         );
                 }
             }
