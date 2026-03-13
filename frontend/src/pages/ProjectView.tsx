@@ -150,12 +150,12 @@ export default function ProjectView() {
 							name="comment"
 							id="commentInput"
 							placeholder="Say something.."
-							className="border rounded focus-visible:outline-1 px-4 py-2"
+							className="text-primary bg-gradient rounded-lg px-4 py-2 shadow-pressed focus-visible:outline-1"
 							value={commentField}
 							onChange={(e) => setCommentField(e.target.value)}
 						/>
 						<button
-							className="bg-black rounded text-white hover:bg-neutral-900 focus-visible:outline-0 focus-visible:bg-neutral-900 active:bg-neutral-800 py-1 px-3 ml-4"
+							className="bg-gradient shadow-default text-primary px-4 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-secondary ml-4 hover:transform-[translateY(-1px)] "
 							onClick={() => postComment("placeholderEmail", commentField)}
 						>
 							Post

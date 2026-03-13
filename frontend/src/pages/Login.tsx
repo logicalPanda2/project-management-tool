@@ -42,7 +42,7 @@ export default function Login() {
 							type="text"
 							name="email"
 							id="emailInput"
-							className="text-primary bg-gradient rounded-lg px-4 py-2 shadow-default focus-visible:outline-1 transition-custom-all"
+							className="text-primary bg-gradient rounded-lg px-4 py-2 shadow-pressed focus-visible:outline-1"
 							value={email}
 							onChange={(e) => {
                                 if(email.trim() && emailErr !== "Invalid email pattern") setEmailErr("");
@@ -62,7 +62,7 @@ export default function Login() {
 							type="password"
 							name="password"
 							id="passwordInput"
-							className="text-primary bg-gradient rounded-lg px-4 py-2 shadow-default focus-visible:outline-1 transition-custom-all"
+							className="text-primary bg-gradient rounded-lg px-4 py-2 shadow-pressed focus-visible:outline-1"
 							value={password}
 							onChange={(e) => {
                                 if(password.trim()) setPasswordErr("");
