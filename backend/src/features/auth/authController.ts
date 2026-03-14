@@ -25,7 +25,7 @@ export async function register(
 
 		await userRepo.createNewUser(email, hashed);
 
-		return res.sendStatus(200);
+		return res.sendStatus(204);
 	} catch (e) {
 		next(e);
 	}
