@@ -10,19 +10,21 @@ export default function ProjectView() {
 
     if(!("id" in params)) return <NotFound />;
     
+    const [initialTasks, setInitialTasks] = useState<Task[]>([]);
 	const [project, setProject] = useState<Record<string, string>>();
 
     useEffect(() => {
         api.get(`/api/projects/${params.id}`)
         .then((res) => {
             setProject(res.data.project.metadata);
+            setInitialTasks(res.data.project.tasks);
         })
         .catch((err) => {
             console.error(err);
         });
     }, []);
 
-    const tasks = useTasks();
+    const tasks = useTasks(initialTasks);
 	const comments = useComments();
 	const [commentField, setCommentField] = useState<string>("");
 

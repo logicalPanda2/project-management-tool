@@ -42,10 +42,13 @@ export default function ProjectEdit() {
 
         if(mode.current === "CREATE") {
             api.post(`/api/projects/${stable_id}`, {
-                title: formData.title,
-                description: formData.description,
-                id: stable_id,
-                status: projectStatus,
+                project: {
+                    title: formData.title,
+                    description: formData.description,
+                    id: stable_id,
+                    status: projectStatus,
+                },
+                tasks: tasks.list
             }).then((_res) => {
                 navigate("/", {
                     replace: true,
