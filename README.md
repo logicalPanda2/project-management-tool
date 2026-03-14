@@ -18,9 +18,7 @@ A full-stack project management tool built with React and Express.
 5. [License](#license)
 
 ## Installation
-```
-git clone https://github.com/logicalPanda2/react-express-fancy-todo-project.git
-```
+TBA
 
 ## Usage
 TBA
@@ -32,9 +30,17 @@ TBA
 - TypeScript
 
 ## TODO
-1. integrate frontend with backend
-2. rework design with neumorphic style
-3. add soft deletion with toasts and confirmation dialogs
+1. integrate frontend with backend:
+    1. enable logging out
+    2. disable going to login page or register if user is already logged in
+    3. add option to switch to register from login page
+    4. add member relations to project on creation and edit
+    5. enable updating tasks in edit page
+    6. fix login issue where access token is the same every time
+    7. add refresh logic
+    8. enable marking tasks as done in both view and edit
+    9. add loading states
+2. add soft deletion, done/undo toasts, confirmation dialogs
 
 ## License
 <a href="./LICENSE.txt">MIT License</a>
