@@ -71,7 +71,7 @@ export async function verifyUserCredentials(
 
 	if (!user) return null;
 	if (user.email !== email) return null;
-	if (await bcrypt.compare(password, user.password)) return null;
+	if (!(await bcrypt.compare(password, user.password))) return null;
 
 	return user;
 }
