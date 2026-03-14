@@ -1,7 +1,7 @@
 import useFormData from "../hooks/useFormData";
 import useTasks from "../hooks/useTasks";
 import useMembers from "../hooks/useMembers";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import validateEmail from "../utils/validateEmail";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../api/api";
@@ -31,7 +31,8 @@ export default function ProjectEdit() {
     }, [params]);
     
 	const formData = useFormData(initialData?.title ?? "", initialData?.description ?? "");
-	const tasks = useTasks();
+    const TEMP_FIX_FOR_INFINITE_RENDERS_REMOVE_LATER = useMemo(() => [], []);
+	const tasks = useTasks(TEMP_FIX_FOR_INFINITE_RENDERS_REMOVE_LATER);
 	const members = useMembers();
     const [projectStatus, setProjectStatus] = useState<Status>("INCOMPLETE");
 
