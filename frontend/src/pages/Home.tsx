@@ -19,7 +19,7 @@ export default function Home() {
 		projects.map((project) => (
 			<div
 				className="max-w-xl md:w-4/5 mb-6 p-6 shadow-bold rounded-2xl relative hover:shadow-bold-hover transition-custom-all"
-				key={project.title}
+				key={project.id}
 			>
                 <div className="flex flex-col sm:flex-row justify-between md:items-center items-start flex-nowrap mb-4 gap-4">
                     <p className="text-2xl font-semibold text-primary">{project.title}</p>
