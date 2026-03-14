@@ -24,6 +24,16 @@ export default function Login() {
     const location = useLocation();
     const mode: "REGISTER" | "LOGIN" = location.pathname === LOGIN_PATH ? "LOGIN" : "REGISTER";
 
+    const switchMode = () => {
+        navigate(mode === "LOGIN" ? "/register" : "/login", {
+            replace: true,
+        });
+        setEmailErr("");
+        setPasswordErr("");
+        setEmail("");
+        setPassword("");
+    }
+
     const validate = (): boolean => {
         setEmailErr("");
         setPasswordErr("");
@@ -93,7 +103,7 @@ export default function Login() {
                     <path d="M5 12h14M13 6l6 6-6 6"/>
                 </svg>
             </Link>}
-			<main className="flex flex-col flex-nowrap justify-center w-2/3 max-w-md">
+			<main className="flex flex-col flex-nowrap justify-center w-2/3 max-w-md relative">
 				<h1 className="text-4xl mb-8 text-primary">{mode === "LOGIN" ? "Log in to your account" : "Create a new account"}</h1>
 				<form
 					action=""
@@ -135,13 +145,19 @@ export default function Login() {
 					<input
 						type="submit"
 						value={mode === "LOGIN" ? "Submit" : "Register"}
-						className="bg-gradient-dark text-light px-4 py-2 rounded-lg shadow-default-dark hover:shadow-hover-dark active:bg-gradient-dark-pressed transition-custom-all focus-visible:outline-[1.5px] focus-visible:outline-accent focus-visible:border-white focus-visible:border"
+						className="bg-gradient-dark text-light px-4 py-2 rounded-lg shadow-default-dark hover:shadow-hover-dark active:bg-gradient-dark-pressed transition-custom-all focus-visible:outline-[1.5px] focus-visible:outline-accent"
                         onClick={async (e) => {
                             e.preventDefault();
                             await sendData();
                         }}
 					/>
 				</form>
+                <button
+                    onClick={switchMode}
+                    className="text-accent-dark inline hover:text-accent mt-4 no-underline hover:underline focus-visible:underline focus-visible:outline-0 self-start transition"
+                >
+                    {mode === "LOGIN" ? "Make a new account" : "Log in instead"}
+                </button>
 			</main>
 		</div>
 	) : <></>;
