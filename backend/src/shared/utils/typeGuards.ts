@@ -6,14 +6,10 @@ export default function isProject(project: unknown): project is Project {
 		!("title" in project) ||
 		!("description" in project) ||
 		!("status" in project) ||
-		!("tasks" in project) ||
-		!("comments" in project) ||
 		typeof project.id !== "string" ||
 		typeof project.title !== "string" ||
 		typeof project.description !== "string" ||
-		typeof project.status !== "string" ||
-		!isTaskArray(project.tasks) ||
-		!isCommentArray(project.comments)
+		typeof project.status !== "string"
 	)
 		return false;
 
