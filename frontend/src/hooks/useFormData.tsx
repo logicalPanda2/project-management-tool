@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function useFormData(initialTitle: string = "", initialDescription: string = "") {
 	const [title, setTitle] = useState<string>(initialTitle);
@@ -9,6 +9,11 @@ export default function useFormData(initialTitle: string = "", initialDescriptio
     const [emailField, setEmailField] = useState<string>("");
     const [taskFieldErr, setTaskFieldErr] = useState<string>("");
     const [emailFieldErr, setEmailFieldErr] = useState<string>("");
+
+    useEffect(() => {
+        setTitle(initialTitle);
+        setDescription(initialDescription);
+    }, [initialTitle, initialDescription]);
 
 	return {
 		title,
