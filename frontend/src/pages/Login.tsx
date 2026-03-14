@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import validateEmail from "../utils/validateEmail";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import api from "../api/api";
 
 const LOGIN_PATH = "/login";
 
@@ -9,6 +10,7 @@ export default function Login() {
 	const [password, setPassword] = useState<string>("");
     const [emailErr, setEmailErr] = useState<string>("");
     const [passwordErr, setPasswordErr] = useState<string>("");
+    const [registerToastVisible, setVisibility] = useState<boolean>(false);  
     const location = useLocation();
     const mode: "REGISTER" | "LOGIN" = location.pathname === LOGIN_PATH ? "LOGIN" : "REGISTER";
 
@@ -16,18 +18,50 @@ export default function Login() {
         setEmailErr("");
         setPasswordErr("");
 
-        if(!email.trim()) 
+        let isInvalid = false;
+
+        if(!email.trim()) {
             setEmailErr("Email cannot be empty");
+            isInvalid = true;
+        }
         
-        if(email.trim() && !validateEmail(email)) 
+        if(email.trim() && !validateEmail(email)) {
             setEmailErr("Invalid email pattern");
+            isInvalid = true;
+        }
 
-        if(!password.trim())
+        if(!password.trim()) {
             setPasswordErr("Password cannot be empty");
+            isInvalid = true;
+        }
 
-        if(emailErr || passwordErr) return false;
+        if(isInvalid) return false;
 
         return true;
+    }
+
+    const sendData = async () => {
+        if(!validate()) return false;
+
+        if(mode === "LOGIN") {
+            try {
+                const res = await api.post("/api/auth/login", { email, password });
+                if(res.status !== 200) throw new Error(`${res.status} ${res.statusText}`);
+                const token = res.data;
+                localStorage.setItem("token", JSON.stringify(token));
+                window.location.pathname = "/";
+            } catch(e) {
+                console.error(e);
+                setPasswordErr("Invalid password");
+            }
+        } else if(mode === "REGISTER") {
+            const res = await api.post("/api/auth/register", { email, password });
+            if(res.status === 204) setVisibility(true);
+            setEmail("");
+            setPassword("");
+        }
+
+        return false;
     }
 
     useEffect(() => {
@@ -37,7 +71,16 @@ export default function Login() {
     }, [email, password]);
 
 	return (
-		<div className="flex justify-center items-center md:min-h-screen min-h-[75vh] bg-default">
+		<div className="flex justify-center items-center md:min-h-screen min-h-[75vh] bg-default relative">
+            {registerToastVisible && mode === "REGISTER" && <Link
+                to={"/login"}
+                className="bg-gradient shadow-default text-primary px-4 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-accent flex flex-row flex-nowrap items-center stroke-neutral-800 hover:stroke-accent absolute top-12 hover:transform-[translateY(-1px)]"
+            >
+                Success! Go to login
+                <svg className="fill-none stroke-inherit stroke-[1.5px] inline-block w-4 ml-1 mt-0.5" viewBox="0 0 24 24">
+                    <path d="M5 12h14M13 6l6 6-6 6"/>
+                </svg>
+            </Link>}
 			<main className="flex flex-col flex-nowrap justify-center w-2/3 max-w-md">
 				<h1 className="text-4xl mb-8 text-primary">{mode === "LOGIN" ? "Log in to your account" : "Create a new account"}</h1>
 				<form
@@ -81,9 +124,9 @@ export default function Login() {
 						type="submit"
 						value={mode === "LOGIN" ? "Submit" : "Register"}
 						className="bg-gradient-dark text-light px-4 py-2 rounded-lg shadow-default-dark hover:shadow-hover-dark active:bg-gradient-dark-pressed transition-custom-all focus-visible:outline-[1.5px] focus-visible:outline-accent focus-visible:border-white focus-visible:border"
-                        onClick={(e) => {
+                        onClick={async (e) => {
                             e.preventDefault();
-                            validate();
+                            await sendData();
                         }}
 					/>
 				</form>
