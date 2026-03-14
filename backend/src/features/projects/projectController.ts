@@ -55,7 +55,7 @@ export async function createOrUpdate(
 	next: (...args: any[]) => any,
 ) {
 	try {
-		const project = req.body;
+		const { project, tasks } = req.body;
 
 		if (
 			typeof project !== "object" ||
@@ -67,7 +67,7 @@ export async function createOrUpdate(
 		const user = req.user;
 		if (!user) return res.sendStatus(400);
 
-		if (!(await Services.upsert(project, user.email))) res.sendStatus(400);
+		if (!(await Services.upsert(project, tasks, user.email))) res.sendStatus(400);
 
 		return res.sendStatus(204);
 	} catch (e) {

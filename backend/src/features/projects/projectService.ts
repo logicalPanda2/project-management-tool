@@ -4,7 +4,7 @@ import * as commentRepo from "./../comments/commentRepo.js";
 import * as userRepo from "./../users/userRepo.js";
 
 export async function getFullProjectData(id: string): Promise<{
-    metadata: ProjectMetadata,
+    metadata: Project,
     comments: ProjectComment[] | null,
     tasks: Task[] | null,
 }> {
@@ -23,7 +23,7 @@ export async function getFullProjectData(id: string): Promise<{
 	};
 }
 
-export async function upsert(newProject: Project, userEmail: string) {
+export async function upsert(newProject: Project, tasks: Task[], userEmail: string) {
 	const project = await projectRepo.getById(newProject.id);
 
 	if (!project) {
@@ -31,6 +31,7 @@ export async function upsert(newProject: Project, userEmail: string) {
 		if (!user) return false;
 
 		await projectRepo.create(newProject);
+        await taskRepo.createMany(tasks, newProject.id);
 		await userRepo.addUserToProject(newProject.id, user.id, "CREATOR");
 
 		return true;
