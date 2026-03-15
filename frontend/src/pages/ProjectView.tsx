@@ -76,7 +76,7 @@ function Content({
 			<article>
 				<section className="mb-10">
 					<header className="max-w-2xl flex flex-col sm:flex-row justify-between md:items-center items-start flex-nowrap mb-5 gap-4">
-                        <h2 className="text-3xl text-primary font-semibold">
+                        <h2 className="text-3xl text-primary font-semibold break-normal wrap-break-word hyphens-auto min-w-0">
                             {project?.title}
                         </h2>
                         <p className={`flex flex-row flex-nowrap items-center rounded-xl font-semibold text-md shadow-pressed bg-gradient px-3 py-0.5 ${project?.status === "INCOMPLETE" ? "text-neutral-800/50" : "text-success"}`}>

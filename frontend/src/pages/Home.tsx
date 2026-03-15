@@ -42,13 +42,13 @@ export default function Home() {
 				key={project.id}
 			>
                 <div className="flex flex-col sm:flex-row justify-between md:items-center items-start flex-nowrap mb-4 gap-4">
-                    <p className="text-2xl font-semibold text-primary">{project.title}</p>
+                    <p className="text-2xl font-semibold text-primary overflow-hidden text-ellipsis">{project.title}</p>
                     <p className={`flex flex-row flex-nowrap items-center rounded-xl font-semibold text-sm shadow-pressed bg-gradient px-3 py-0.5 ${project.status === "INCOMPLETE" ? "text-neutral-800/50" : "text-success"}`}>
                         <span className={`rounded-full w-2 h-2 inline-block mr-2 ${project.status === "INCOMPLETE" ? "bg-neutral-800/40" : "bg-text-success"}`}></span>
                         {project.status}
                     </p>
                 </div>
-				<p className="mb-6 text-secondary">{project.description}</p>
+				<p className="mb-6 text-secondary whitespace-nowrap text-ellipsis overflow-hidden">{project.description}</p>
                 <div className="hover:transform-[translateY(-1px)] transition-custom-all w-fit">
                     <Link
                         to={`project/${project.id}`}
