@@ -17,12 +17,10 @@ export async function getFullProjectData(id: string): Promise<{
     const members: User[] = await userRepo.getAllByProjectId(id);
 
 	return {
-		metadata: {
-            ...metadata,
-        },
-		comments: comments && comments.length !== 0 ? [...comments] : null,
-		tasks: tasks && tasks.length !== 0 ? [...tasks] : null,
-        members: members,
+		metadata,
+		comments: comments && comments.length !== 0 ? comments : null,
+		tasks,
+        members,
 	};
 }
 
