@@ -450,6 +450,24 @@ function Content({
                 </svg>
                 Confirm
             </button>
+            {mode.current === "EDIT" && <button
+                className="bg-gradient shadow-default px-3 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-danger-dark hover:transform-[translateY(-1px)] text-danger text-sm font-semibold stroke-danger hover:stroke-danger-dark ml-4"
+                onClick={async (e) => {
+                    e.preventDefault();
+                    await navigate("/", {
+                        replace: true,
+                    });
+                    api.delete(`/api/projects/${paramsId}`);
+                }}
+            >
+                <svg className="fill-none stroke-inherit stroke-[1.5px] inline-block w-4 mr-2 mb-0.5" viewBox="0 0 24 24">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6l-1 14H6L5 6"/>
+                    <path d="M10 11v6M14 11v6"/>
+                    <path d="M9 6V4h6v2"/>
+                </svg>
+                Delete
+            </button>}
 		</form>
 	);
 }
