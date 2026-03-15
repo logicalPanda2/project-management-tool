@@ -2,6 +2,7 @@ import * as projectRepo from "./projectRepo.js";
 import * as taskRepo from "./../tasks/taskRepo.js";
 import * as commentRepo from "./../comments/commentRepo.js";
 import * as userRepo from "./../users/userRepo.js";
+import HttpError from "../../shared/classes/HttpError.js";
 
 export async function getFullProjectData(id: string): Promise<{
     metadata: Project,
@@ -10,6 +11,8 @@ export async function getFullProjectData(id: string): Promise<{
     members: User[],
 }> {
 	const metadata = await projectRepo.getById(id);
+    if(!metadata) throw new HttpError(404, "Not Found");
+
 	const tasks: Task[] = await taskRepo.getAllByProjectId(id);
 	const comments: ProjectComment[] = await commentRepo.getAllByProjectId(id);
     const members: User[] = await userRepo.getAllByProjectId(id);
