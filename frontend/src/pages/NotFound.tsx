@@ -5,7 +5,7 @@ export default function NotFound() {
 		<main className="min-h-screen flex justify-center items-center">
 			<h1 className="flex flex-col flex-nowrap items-center text-center">
                 <span className="text-8xl text-primary mb-6">404</span>
-                <span className="text-2xl text-secondary mx-12 mb-8">The page you were looking for does not exist.</span>
+                <span className="text-2xl text-secondary mx-12 mb-8 max-w-4/5">The page you were looking for does not exist or you do not have the necessary privileges.</span>
                 <div className="hover:transform-[translateY(-1px)] transition-custom-all w-fit">
                     <Link
                         to={"/"}
