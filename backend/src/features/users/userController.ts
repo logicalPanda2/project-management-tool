@@ -20,7 +20,7 @@ export async function verifyRole(
             return res.json({ isCreator: true });
         }
 
-        return res.json({ isCreator: false });
+        return res.json({ isCreator: false, email: user.email });
     } catch(e) {
         next(e);
     }

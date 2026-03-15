@@ -20,7 +20,10 @@ export default function ProjectView() {
 	const comments = useComments();
     const members = useMembers();
     const [isFetching, setFetching] = useState<boolean>(false);
-    const [role, setRole] = useState<UserRole>("CONTRIBUTOR");
+    const [identity, setIdentity] = useState<{ email: string, role: UserRole }>({
+        email: "",
+        role: "CONTRIBUTOR"
+    });
 
     useEffect(() => {
         let cancelled: boolean = false;
@@ -33,7 +36,10 @@ export default function ProjectView() {
 
                 if(cancelled) return;
 
-                if(role.data.isCreator) setRole("CREATOR");
+                setIdentity({
+                    email: role.data.email,
+                    role: role.data.isCreator ? "CREATOR" : "CONTRIBUTOR",
+                });
                 project.setTitle(res.data.metadata.title);
                 project.setDescription(res.data.metadata.description);
                 project.setStatus(res.data.metadata.status);
@@ -69,7 +75,7 @@ export default function ProjectView() {
             tasks={tasks}
             comments={comments}
             updateProjectStatus={() => project.updateStatus(params.id!, tasks, members)}
-            role={role}
+            identity={identity}
             paramsId={params.id!}
         />;
 }
@@ -79,14 +85,14 @@ function Content({
     tasks,
     comments,
     updateProjectStatus,
-    role,
+    identity,
     paramsId,
 }: {
     project: ReturnType<typeof useProject>,
     tasks: ReturnType<typeof useTasks>,
     comments: ReturnType<typeof useComments>,
     updateProjectStatus: () => void,
-    role: UserRole,
+    identity: { role: UserRole, email: string },
     paramsId: string,
 }) {
     const [commentField, setCommentField] = useState<string>("");
@@ -106,7 +112,7 @@ function Content({
                             <span className={`rounded-full w-2 h-2 inline-block mr-2 ${project.status === "INCOMPLETE" ? "bg-neutral-800/40" : "bg-text-success"}`}></span>
                             {project.status}
                         </p>
-                        <button
+                        {identity.role === "CREATOR" && <button
                             className="bg-gradient shadow-default px-3 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-success-dark hover:transform-[translateY(-1px)] text-success font-semibold stroke-success hover:stroke-success-dark mt-4 sm:mt-0"
                             onClick={(e) => {
                                 e.preventDefault();
@@ -117,7 +123,7 @@ function Content({
                                 <polyline points="20 6 9 17 4 12"/>
                             </svg>
                             Finish project
-                        </button>
+                        </button>}
                     </div>
 				</section>
 				<section className="mb-10">
@@ -164,7 +170,7 @@ function Content({
 									<p className="mb-2 text-secondary">{c.email}</p>
 									<p className="text-lg">{c.title}</p>
 								</div>
-								<button
+								{(identity.role === "CREATOR" || identity.email === c.email) && <button
                                     className="bg-gradient shadow-default px-3 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-danger-dark hover:transform-[translateY(-1px)] text-danger text-sm font-semibold stroke-danger hover:stroke-danger-dark"
                                     onClick={() => comments.remove(c)}
                                 >
@@ -175,7 +181,7 @@ function Content({
                                         <path d="M9 6V4h6v2"/>
                                     </svg>
                                     Delete
-                                </button>
+                                </button>}
 							</div>
 						))
 					) : (
@@ -208,7 +214,7 @@ function Content({
 						</button>
 					</div>
 				</section>
-				<div className="hover:transform-[translateY(-1px)] transition-custom-all w-fit">
+				{identity.role === "CREATOR" && <div className="hover:transform-[translateY(-1px)] transition-custom-all w-fit">
                     <Link
                         to={`edit`}
                         className="bg-gradient shadow-default text-primary px-4 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-accent flex flex-row flex-nowrap items-center stroke-neutral-800 hover:stroke-accent"
@@ -218,7 +224,7 @@ function Content({
                             <path d="M5 12h14M13 6l6 6-6 6"/>
                         </svg>
                     </Link>
-                </div>
+                </div>}
 			</article>
 		</>
 	);
