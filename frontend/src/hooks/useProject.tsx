@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 
 export default function useProject(
-    initialTitle: string, 
-    initialDescription: string,
-    initialStatus: Status,
+    initialTitle: string = "",
+    initialDescription: string = "",
+    initialStatus: Status = "INCOMPLETE",
 ) {
     const [title, setTitle] = useState<string>(initialTitle ?? "");
 	const [description, setDescription] = useState<string>(initialDescription ?? "");

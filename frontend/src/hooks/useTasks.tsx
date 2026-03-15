@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 export default function useTasks(initial: Task[] = []) {
-	const [list, setList] = useState<Task[]>(initial);
+	const [list, setList] = useState<Task[]>(initial ?? []);
 
     useEffect(() => {
         setList(initial);
