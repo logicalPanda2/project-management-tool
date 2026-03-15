@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import useTasks from "../hooks/useTasks";
 import useComments from "../hooks/useComments";
 import useProject from "../hooks/useProject";
 import LoadingSpinner from "../components/LoadingSpinner";
-import NotFound from "./NotFound";
 import api from "../api/api";
 
 export default function ProjectView() {
     const params = useParams();
-    if(!("id" in params)) return <NotFound />;
+    const navigate = useNavigate();
+
+    if(!("id" in params)) navigate("/404", {
+        replace: true,
+    });
 
 	const project = useProject();
     const tasks = useTasks();
@@ -33,6 +36,14 @@ export default function ProjectView() {
                 comments.setList(res.data.comments);
             } catch(e) {
                 console.error(e);
+                if( 
+                    typeof e === "object" &&
+                    e !== null &&
+                    "status" in e &&
+                    e.status === 404
+                ) navigate("/404", {
+                    replace: true,
+                });
             } finally {
                 setFetching(false);
             }
