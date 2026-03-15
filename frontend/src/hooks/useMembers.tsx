@@ -1,11 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function useMembers(initialEmails: User[] = []) {
 	const [emails, setEmails] = useState<User[]>(initialEmails ?? []);
-
-    useEffect(() => {
-        setEmails(initialEmails);
-    }, [initialEmails]);
 
 	const add = (email: string): void => {
 		setEmails([
@@ -39,5 +35,6 @@ export default function useMembers(initialEmails: User[] = []) {
 		edit,
 		remove,
         emails,
+        setEmails,
 	};
 }

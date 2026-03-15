@@ -1,11 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function useTasks(initial: Task[] = []) {
 	const [list, setList] = useState<Task[]>(initial ?? []);
-
-    useEffect(() => {
-        setList(initial);
-    }, [initial]);
 
 	const add = (): void => {
 		const newTask: Task = {
@@ -53,5 +49,6 @@ export default function useTasks(initial: Task[] = []) {
 		editTitle,
 		remove,
 		list,
+        setList
 	};
 }

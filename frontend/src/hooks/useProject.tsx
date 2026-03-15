@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export default function useProject(
     initialTitle: string = "",
@@ -8,12 +8,6 @@ export default function useProject(
     const [title, setTitle] = useState<string>(initialTitle ?? "");
 	const [description, setDescription] = useState<string>(initialDescription ?? "");
     const [status, setStatus] = useState<Status>(initialStatus ?? "INCOMPLETE");
-
-    useEffect(() => {
-        setTitle(initialTitle);
-        setDescription(initialDescription);
-        setStatus(initialStatus);
-    }, [initialTitle, initialDescription]);
 
     return {
         title,
