@@ -1,21 +1,41 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../api/api";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 export default function Home() {
-    const [projects, setProjects] = useState<Project[]>([]);
+    const [projects, setProjects] = useState<Project[] | null>(null);
+    const [isFetching, setFetching] = useState<boolean>(false);
 
 	useEffect(() => {
-        api.get("/api/projects")
-        .then((res) => {
-            setProjects(res.data.projects);
-        })
-        .catch((err) => {
-            console.error(err);
-        });
+        let cancelled: boolean = false;
+
+        async function fetchProject() {
+            setFetching(true);
+            try {
+                const res = await api.get(`/api/projects`);
+
+                if(cancelled) throw new Error("Process aborted.");
+
+                setProjects(res.data.projects ?? []);
+            } catch(e) {
+                console.error(e);
+            } finally {
+                setFetching(false);
+            }
+        }
+        
+        fetchProject();
+
+        return () => {
+            cancelled = true;
+        }
     }, []);
 
-	return projects.length > 0 ? (
+	return isFetching
+    ? <LoadingSpinner />
+    : projects && projects.length > 0
+    ? (
 		projects.map((project) => (
 			<div
 				className="max-w-xl md:w-4/5 mb-6 p-6 shadow-bold rounded-2xl relative hover:shadow-bold-hover transition-custom-all"
@@ -42,19 +62,18 @@ export default function Home() {
                 </div>
 			</div>
 		))
-	) : (
-		<>
+	)
+    : (projects && <>
 			<p className="text-center text-2xl text-primary mb-6">
-				There are no projects yet.
-			</p>
-			<div className="self-center hover:transform-[translateY(-1px)] transition-custom-all w-fit">
-                <Link
-                    to={"/project/new"}
-                    className="bg-gradient shadow-default text-primary px-4 py-2 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-secondary"
-                >
-                    New project
-                </Link>
-            </div>
-		</>
-	);
+            There are no projects yet.
+        </p>
+        <div className="self-center hover:transform-[translateY(-1px)] transition-custom-all w-fit">
+            <Link
+                to={"/project/new"}
+                className="bg-gradient shadow-default text-primary px-4 py-2 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-secondary"
+            >
+                New project
+            </Link>
+        </div>
+    </>);
 }
