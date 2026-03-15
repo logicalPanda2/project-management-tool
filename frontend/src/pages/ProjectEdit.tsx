@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useFormData from "../hooks/useFormData";
 import useProject from "../hooks/useProject";
@@ -6,11 +6,15 @@ import useTasks from "../hooks/useTasks";
 import useMembers from "../hooks/useMembers";
 import validateEmail from "../utils/validateEmail";
 import api from "../api/api";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 export default function ProjectEdit() {
+    const formData = useFormData();
+    const project = useProject();
+	const tasks = useTasks();
+	const members = useMembers();
     const params = useParams();
-    const navigate = useNavigate();
-    const [initialData, setInitialData] = useState<any>(); 
+    const [isFetching, setFetching] = useState<boolean>(false);
     const mode = useRef<"CREATE" | "EDIT">("CREATE");
 
     useEffect(() => {
@@ -18,26 +22,67 @@ export default function ProjectEdit() {
             !("id" in params) ||
             typeof params.id !== "string"
         ) {
-            setInitialData(null);
+            // no need to set mode
+            // since the default mode is already "CREATE"
             return;
         }
 
-        api.get(`/api/projects/${params.id}`)
-        .then((res) => {
-            setInitialData(res.data.project);
-            mode.current = "EDIT";
-        }).catch((e) => {
-            console.error(e);
-        });
-    }, [params]);
-    
-	const formData = useFormData();
-    const TEMP_FIX_FOR_INFINITE_RENDERS_REMOVE_LATER = useMemo(() => [], []);
-	const tasks = useTasks(initialData?.tasks ?? TEMP_FIX_FOR_INFINITE_RENDERS_REMOVE_LATER);
-	const members = useMembers(initialData?.members ?? TEMP_FIX_FOR_INFINITE_RENDERS_REMOVE_LATER);
-    const project = useProject(initialData?.metadata?.title, initialData?.metadata?.description, initialData?.metadata?.status);
+        let cancelled: boolean = false;
+        mode.current = "EDIT";
 
-	const sendData = () => {
+        async function fetchProject() {
+            setFetching(true);
+            try {
+                const res = await api.get(`/api/projects/${params.id}`);
+
+                if(cancelled) throw new Error("Process aborted.");
+
+                project.setTitle(res.data.metadata.title);
+                project.setDescription(res.data.metadata.description);
+                project.setStatus(res.data.metadata.status);
+                tasks.setList(res.data.tasks);
+                members.setEmails(res.data.members);
+            } catch(e) {
+                console.error(e);
+            } finally {
+                setFetching(false);
+            }
+        }
+        
+        fetchProject();
+
+        return () => {
+            cancelled = true;
+        }
+    }, []);
+
+    return isFetching
+        ? <LoadingSpinner />
+        : <Content 
+            mode={mode}
+            project={project}
+            tasks={tasks}
+            members={members}
+            formData={formData}
+        />
+}
+
+function Content({
+    mode,
+    project,
+    tasks,
+    members,
+    formData,
+}: {
+    mode: ReturnType<typeof useRef<"CREATE" | "EDIT">>,
+    project: ReturnType<typeof useProject>,
+    tasks: ReturnType<typeof useTasks>,
+    members: ReturnType<typeof useMembers>,
+    formData: ReturnType<typeof useFormData>,
+}) {
+    const navigate = useNavigate();
+
+    const sendData = () => {
 		if(!validate()) return false;
         
         const stable_id = crypto.randomUUID();
@@ -60,7 +105,7 @@ export default function ProjectEdit() {
                 console.error(e);
             });
         } else if(mode.current === "EDIT") {
-
+            // edit logic
         }
 
         return false;
@@ -150,7 +195,7 @@ export default function ProjectEdit() {
             formData.setEmailFieldErr("");
     }, [formData.emailField]);
 
-	return (
+    return (
 		<form action="" className="max-w-xl">
 			<section className="mb-10">
 				<header>
