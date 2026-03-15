@@ -20,6 +20,7 @@ export default function ProjectView() {
 	const comments = useComments();
     const members = useMembers();
     const [isFetching, setFetching] = useState<boolean>(false);
+    const [role, setRole] = useState<UserRole>("CONTRIBUTOR");
 
     useEffect(() => {
         let cancelled: boolean = false;
@@ -28,9 +29,11 @@ export default function ProjectView() {
             setFetching(true);
             try {
                 const res = await api.get(`/api/projects/${params.id}`);
+                const role = await api.get(`/api/users/${params.id}`);
 
                 if(cancelled) return;
 
+                if(role.data.isCreator) setRole("CREATOR");
                 project.setTitle(res.data.metadata.title);
                 project.setDescription(res.data.metadata.description);
                 project.setStatus(res.data.metadata.status);
@@ -66,6 +69,7 @@ export default function ProjectView() {
             tasks={tasks}
             comments={comments}
             updateProjectStatus={() => project.updateStatus(params.id!, tasks, members)}
+            role={role}
         />;
 }
 
@@ -73,12 +77,14 @@ function Content({
     project,
     tasks,
     comments,
-    updateProjectStatus
+    updateProjectStatus,
+    role,
 }: {
     project: ReturnType<typeof useProject>,
     tasks: ReturnType<typeof useTasks>,
     comments: ReturnType<typeof useComments>,
     updateProjectStatus: () => void,
+    role: UserRole,
 }) {
     const [commentField, setCommentField] = useState<string>("");
     const postComment = (userEmail: string, content: string): void => {
@@ -88,7 +94,7 @@ function Content({
         setCommentField("");
     }
 
-	return (
+    return (
 		<>
 			<article>
 				<section className="mb-10">

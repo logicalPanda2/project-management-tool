@@ -7,6 +7,7 @@ import authRouter from "./features/auth/authRouter.js";
 import projectRouter from "./features/projects/projectRouter.js";
 import taskRouter from "./features/tasks/taskRouter.js";
 import commentRouter from "./features/comments/commentRouter.js";
+import userRouter from "./features/users/userRouter.js";
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(authMiddleware);
 app.use("/projects", projectRouter);
 app.use("/tasks", taskRouter);
 app.use("/comments", commentRouter);
+app.use("/users", userRouter);
 
 app.use(errorMiddleware);
 
