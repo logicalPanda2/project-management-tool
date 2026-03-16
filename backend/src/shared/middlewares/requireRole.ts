@@ -21,7 +21,7 @@ export default function requireRole(role: UserRole) {
         const projectId = req.params.projectId;
         const roleInfo = await userRepo.getRole(DBUser.id, projectId);
 
-        if(user.email === roleInfo.email && roleInfo.role !== role) return res.sendStatus(403);
+        if(user.email === roleInfo.email && roleInfo.user_role !== role) return res.sendStatus(403);
         else next();
 
         return undefined;

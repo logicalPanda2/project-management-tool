@@ -68,7 +68,7 @@ export async function getRole(
     );
 
     return result?.rows[0] as {
-        role: UserRole,
+        user_role: UserRole,
         email: string,
     };
 }
