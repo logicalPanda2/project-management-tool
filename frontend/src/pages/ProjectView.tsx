@@ -52,7 +52,10 @@ export default function ProjectView() {
                     typeof e === "object" &&
                     e !== null &&
                     "status" in e &&
-                    e.status === 404
+                    (
+                        e.status === 404 ||
+                        e.status === 403
+                    )
                 ) navigate("/404", {
                     replace: true,
                 });
