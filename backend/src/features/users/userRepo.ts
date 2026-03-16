@@ -54,17 +54,18 @@ export async function addUserToProject(
 	);
 }
 
-export async function getCreatorEmailByProjectId(
+export async function getRole(
+    userId: string,
     projectId: string,
 ) {
     const result = await pool?.query(
-		`SELECT u.email
-        FROM users u
-        INNER JOIN user_projects up
-        ON u.id = up.user_id
-        WHERE up.user_role = 'CREATOR' AND up.project_id = $1;`,
-		[projectId],
-	);
+        `SELECT u.email, up.user_role
+        FROM users u 
+        INNER JOIN user_projects up 
+        ON u.id = up.user_id 
+        WHERE u.id = $1 AND up.project_id = $2;`,
+        [userId, projectId]
+    );
 
     return result?.rows[0];
 }
