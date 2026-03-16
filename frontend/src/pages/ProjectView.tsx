@@ -20,9 +20,9 @@ export default function ProjectView() {
 	const comments = useComments();
     const members = useMembers();
     const [isFetching, setFetching] = useState<boolean>(false);
-    const [identity, setIdentity] = useState<{ email: string, role: UserRole }>({
+    const [userInfo, setUserInfo] = useState<{ role: UserRole, email: string }>({
+        role: "CONTRIBUTOR",
         email: "",
-        role: "CONTRIBUTOR"
     });
 
     useEffect(() => {
@@ -32,13 +32,13 @@ export default function ProjectView() {
             setFetching(true);
             try {
                 const res = await api.get(`/api/projects/${params.id}`);
-                const role = await api.get(`/api/users/${params.id}`);
+                const roleRes = await api.get(`/api/projects/${params.id}/role`);
 
                 if(cancelled) return;
 
-                setIdentity({
-                    email: role.data.email,
-                    role: role.data.isCreator ? "CREATOR" : "CONTRIBUTOR",
+                setUserInfo({
+                    role: roleRes.data.user_role,
+                    email: roleRes.data.email,
                 });
                 project.setTitle(res.data.metadata.title);
                 project.setDescription(res.data.metadata.description);
@@ -75,8 +75,8 @@ export default function ProjectView() {
             tasks={tasks}
             comments={comments}
             updateProjectStatus={() => project.updateStatus(params.id!, tasks, members)}
-            identity={identity}
-            paramsId={params.id!}
+            projectId={params.id!}
+            userInfo={userInfo}
         />;
 }
 
@@ -85,15 +85,18 @@ function Content({
     tasks,
     comments,
     updateProjectStatus,
-    identity,
-    paramsId,
+    projectId,
+    userInfo,
 }: {
     project: ReturnType<typeof useProject>,
     tasks: ReturnType<typeof useTasks>,
     comments: ReturnType<typeof useComments>,
     updateProjectStatus: () => void,
-    identity: { role: UserRole, email: string },
-    paramsId: string,
+    projectId: string,
+    userInfo: {
+        role: UserRole,
+        email: string
+    }
 }) {
     const [commentField, setCommentField] = useState<string>("");
 
@@ -112,7 +115,7 @@ function Content({
                             <span className={`rounded-full w-2 h-2 inline-block mr-2 ${project.status === "INCOMPLETE" ? "bg-neutral-800/40" : "bg-text-success"}`}></span>
                             {project.status}
                         </p>
-                        {identity.role === "CREATOR" && <button
+                        {userInfo.role === "CREATOR" && <button
                             className="bg-gradient shadow-default px-3 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-success-dark hover:transform-[translateY(-1px)] text-success font-semibold stroke-success hover:stroke-success-dark mt-4 sm:mt-0"
                             onClick={(e) => {
                                 e.preventDefault();
@@ -170,7 +173,7 @@ function Content({
 									<p className="mb-2 text-secondary">{c.email}</p>
 									<p className="text-lg">{c.title}</p>
 								</div>
-								{(identity.role === "CREATOR" || identity.email === c.email) && <button
+								{userInfo.role === "CREATOR" && <button
                                     className="bg-gradient shadow-default px-3 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-danger-dark hover:transform-[translateY(-1px)] text-danger text-sm font-semibold stroke-danger hover:stroke-danger-dark"
                                     onClick={() => comments.remove(c)}
                                 >
@@ -206,7 +209,7 @@ function Content({
 							onClick={() => {
                                 if(!commentField.trim()) return;
         
-                                comments.post(commentField, paramsId);
+                                comments.post(commentField, projectId);
                                 setCommentField("");
                             }}
 						>
@@ -214,7 +217,7 @@ function Content({
 						</button>
 					</div>
 				</section>
-				{identity.role === "CREATOR" && <div className="hover:transform-[translateY(-1px)] transition-custom-all w-fit">
+				{userInfo.role === "CREATOR" && <div className="hover:transform-[translateY(-1px)] transition-custom-all w-fit">
                     <Link
                         to={`edit`}
                         className="bg-gradient shadow-default text-primary px-4 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-accent flex flex-row flex-nowrap items-center stroke-neutral-800 hover:stroke-accent"
