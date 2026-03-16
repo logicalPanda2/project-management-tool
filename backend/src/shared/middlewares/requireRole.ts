@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import * as userRepo from "./../../features/users/userRepo.js";
+import * as projectRepo from "./../../features/projects/projectRepo.js";
 
 export default function requireRole(role: UserRole) {
     return async function (
@@ -20,7 +21,12 @@ export default function requireRole(role: UserRole) {
 
         const projectId = req.params.projectId;
         const roleInfo = await userRepo.getRole(DBUser.id, projectId);
-        if(!roleInfo) return res.sendStatus(403);
+        if(!roleInfo) {
+            // let creation proceed if project does not exist
+            const project = await projectRepo.getById(projectId);
+            if(!project) return next();
+            else return res.sendStatus(403);
+        }
 
         const requiredRole = role;
         const actualRole = roleInfo.user_role;
