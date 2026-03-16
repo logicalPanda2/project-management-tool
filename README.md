@@ -87,8 +87,7 @@ The following will be fixed/implemented as soon as possible.
 
 ### Issues to fix
 
-- The access token is the same for every single login session
-- Comments disappear when editing project
+- Remove-all recreate-all project update logic, which causes disappearing comments 
 
 ### Areas of improvement
 
@@ -96,7 +95,6 @@ The following will be fixed/implemented as soon as possible.
 - DB query optimization
 - Refresh logic for authenticated users
 - Further component modularization
-- Better project update logic
 
 ### Further polish
 
