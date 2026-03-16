@@ -209,7 +209,7 @@ function Content({
 							onClick={() => {
                                 if(!commentField.trim()) return;
         
-                                comments.post(commentField, projectId);
+                                comments.post(commentField, projectId, userInfo.email);
                                 setCommentField("");
                             }}
 						>

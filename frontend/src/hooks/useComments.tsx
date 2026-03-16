@@ -4,16 +4,16 @@ import api from "../api/api";
 export default function useComments(initial: ProjectComment[] = []) {
     const [list, setList] = useState<ProjectComment[]>(initial ?? []);
 
-	const post = async (content: string, projectId: string): Promise<void> => {
-        const newComment = {
+	const post = async (content: string, projectId: string, userEmail: string): Promise<void> => {
+        const newComment: ProjectComment = {
             title: content,
             id: crypto.randomUUID(),
+            email: userEmail,
         };
 
         await api.post(`/api/projects/${projectId}/comments`, { comment: newComment });
-        const res = await api.get(`/api/projects/${projectId}/comments`);
-
-		setList(res.data.comments);
+        
+		setList([...list, newComment]);
 	};
 
 	const remove = async (comment: ProjectComment): Promise<void> => {
