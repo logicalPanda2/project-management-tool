@@ -57,7 +57,10 @@ export async function addUserToProject(
 export async function getRole(
     userId: string,
     projectId: string,
-) {
+): Promise<{
+    user_role: UserRole,
+    email: string,
+} | undefined> {
     const result = await pool?.query(
         `SELECT u.email, up.user_role
         FROM users u 

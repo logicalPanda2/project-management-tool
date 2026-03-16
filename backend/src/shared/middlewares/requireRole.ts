@@ -20,8 +20,15 @@ export default function requireRole(role: UserRole) {
 
         const projectId = req.params.projectId;
         const roleInfo = await userRepo.getRole(DBUser.id, projectId);
+        if(!roleInfo) return res.sendStatus(403);
 
-        if(user.email === roleInfo.email && roleInfo.user_role !== role) return res.sendStatus(403);
+        const requiredRole = role;
+        const actualRole = roleInfo.user_role;
+
+        // creator has higher privileges than contributor
+        // only check whether a contributor is claiming to be a creator
+        // if the user is honest, or a creator, proceed
+        if(requiredRole === "CREATOR" && actualRole === "CONTRIBUTOR") return res.sendStatus(403);
         else next();
 
         return undefined;
