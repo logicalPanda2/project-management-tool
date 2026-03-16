@@ -60,9 +60,10 @@ export async function getRole(
 ): Promise<{
     user_role: UserRole,
     email: string,
+    id: string
 } | undefined> {
     const result = await pool?.query(
-        `SELECT u.email, up.user_role
+        `SELECT u.email, up.user_role, u.id
         FROM users u 
         INNER JOIN user_projects up 
         ON u.id = up.user_id 
@@ -73,5 +74,6 @@ export async function getRole(
     return result?.rows[0] as {
         user_role: UserRole,
         email: string,
+        id: string,
     };
 }

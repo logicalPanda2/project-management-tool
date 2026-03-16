@@ -16,8 +16,8 @@ export default function useComments(initial: ProjectComment[] = []) {
 		setList([...list, newComment]);
 	};
 
-	const remove = async (comment: ProjectComment): Promise<void> => {
-        await api.delete(`/api/comments/${comment.id}`);
+	const remove = async (comment: ProjectComment, projectId: string): Promise<void> => {
+        await api.delete(`/api/projects/${projectId}/comments/${comment.id}`);
 
 		setList([...list.filter((c) => c.id !== comment.id)]);
 	};

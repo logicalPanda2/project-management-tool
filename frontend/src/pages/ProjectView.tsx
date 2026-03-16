@@ -178,7 +178,7 @@ function Content({
 								</div>
 								{(userInfo.role === "CREATOR" || userInfo.email === c.email) && <button
                                     className="bg-gradient shadow-default px-3 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-danger-dark hover:transform-[translateY(-1px)] text-danger text-sm font-semibold stroke-danger hover:stroke-danger-dark"
-                                    onClick={() => comments.remove(c)}
+                                    onClick={() => comments.remove(c, projectId)}
                                 >
                                     <svg className="fill-none stroke-inherit stroke-[1.5px] inline-block w-4 mr-2 mb-0.5" viewBox="0 0 24 24">
                                         <polyline points="3 6 5 6 21 6"/>

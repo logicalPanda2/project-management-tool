@@ -30,3 +30,14 @@ export async function getAllByProjectId(
 
 	return result?.rows as ProjectComment[];
 }
+
+export async function getAssociatedUserId(
+    commentId: string,
+): Promise<{ user_id: string }> {
+    const result = await pool?.query(
+		`SELECT user_id FROM comments WHERE id = $1`,
+		[commentId],
+	);
+
+	return result?.rows[0] as { user_id: string };
+}
