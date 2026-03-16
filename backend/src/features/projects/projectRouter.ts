@@ -12,5 +12,6 @@ projectRouter.delete("/:projectId", Controllers.deleteById);
 projectRouter.use("/:projectId/tasks", taskRouter);
 projectRouter.use("/:projectId/comments", commentRouter);
 projectRouter.post("/:projectId/members", Controllers.invite);
+projectRouter.get("/:projectId/role", Controllers.getRole);
 
 export default projectRouter;

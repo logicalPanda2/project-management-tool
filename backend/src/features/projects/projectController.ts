@@ -118,6 +118,7 @@ export async function invite(
 			return res.sendStatus(400);
 
 		const userEmail = req.params.userEmail;
+        // what?
 		const projectId = req.params.projectId;
 		const user = await userRepo.getUserByEmail(userEmail);
 
@@ -131,4 +132,33 @@ export async function invite(
 	}
 
 	return undefined;
+}
+
+export async function getRole(
+    req: Request,
+	res: Response,
+	next: (...args: any[]) => any,
+) {
+    try {
+        if(
+            !("projectId" in req.params) ||
+            typeof req.params.projectId !== "string"
+        ) return res.sendStatus(400);
+
+        const user = req.user;
+        if(!user) return res.sendStatus(401);
+        
+        const DBUser = await userRepo.getUserByEmail(user.email);
+        if(!DBUser) return res.sendStatus(401);
+
+        const projectId = req.params.projectId;
+        const roleInfo = await userRepo.getRole(DBUser.id, projectId);
+
+        return res.json({ ...roleInfo });
+    }
+    catch(e) {
+        next(e);
+    }
+
+    return undefined;
 }
