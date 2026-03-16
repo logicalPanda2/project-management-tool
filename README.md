@@ -88,16 +88,15 @@ The following will be fixed/implemented as soon as possible.
 ### Issues to fix
 
 - The access token is the same for every single login session
+- Comments disappear when editing project
 
 ### Areas of improvement
 
 - DB transactions
 - DB query optimization
 - Refresh logic for authenticated users
-- Backend role middlewares to guard against unauthorized access
-- /:projectId/role endpoint
-- Stricter role-based access (via 404 redirects) in the client side
 - Further component modularization
+- Better project update logic
 
 ### Further polish
 
