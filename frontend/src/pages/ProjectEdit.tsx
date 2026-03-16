@@ -34,6 +34,9 @@ export default function ProjectEdit() {
         async function fetchProject() {
             setFetching(true);
             try {
+                const roleRes = await api.get(`/api/projects/${params.id}/role`);
+                if(roleRes.data.user_role !== "CREATOR") throw { status: 403, message: "Forbidden" };
+
                 const res = await api.get(`/api/projects/${params.id}`);
 
                 if(cancelled) return;
@@ -49,7 +52,10 @@ export default function ProjectEdit() {
                     typeof e === "object" &&
                     e !== null &&
                     "status" in e &&
-                    e.status === 404
+                    (
+                        e.status === 404 ||
+                        e.status === 403
+                    )
                 ) navigate("/404", {
                     replace: true,
                 });
