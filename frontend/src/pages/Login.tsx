@@ -93,7 +93,7 @@ export default function Login() {
     }, [email, password]);
 
 	return !token ? (
-		<div className="flex justify-center items-center md:min-h-screen min-h-[75vh] bg-default relative">
+		<div className="flex justify-center items-center min-h-screen bg-default relative">
             {registerToastVisible && mode === "REGISTER" && <Link
                 to={"/login"}
                 className="bg-gradient shadow-default text-primary px-4 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-accent flex flex-row flex-nowrap items-center stroke-neutral-800 hover:stroke-accent absolute top-12 hover:transform-[translateY(-1px)]"
