@@ -118,7 +118,6 @@ export async function invite(
 			return res.sendStatus(400);
 
 		const userEmail = req.params.userEmail;
-        // what?
 		const projectId = req.params.projectId;
 		const user = await userRepo.getUserByEmail(userEmail);
 
