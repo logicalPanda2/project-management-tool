@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import useTasks from "../hooks/useTasks";
 import useComments from "../hooks/useComments";
@@ -102,10 +102,28 @@ function Content({
     }
 }) {
     const [commentField, setCommentField] = useState<string>("");
+    const [toastVisible, setVisible] = useState<boolean>(false);
+    const [undoCallback, setUndoCallback] = useState<Function | null>(null);
+    const timeoutId = useRef<number>(-1);
+    const softDeleteDelay = 8000;
+
+    const softDelete = (
+        deleteCallback: (...args: any[]) => any,
+        undoCallback: (...args: any[]) => any,
+    ) => {
+        setVisible(true);
+        setUndoCallback(() => undoCallback);
+
+        timeoutId.current = setTimeout(() => {
+            deleteCallback();
+            setVisible(false);
+            setUndoCallback(null);
+        }, softDeleteDelay);
+    }
 
     return (
 		<>
-			<article>
+			<article className="relative">
 				<section className="mb-10">
                     <h2 className="text-3xl text-primary font-semibold wrap-anywhere hyphens-auto min-w-0 max-w-2xl mb-4">
                         {project?.title}
@@ -178,7 +196,13 @@ function Content({
 								</div>
 								{(userInfo.role === "CREATOR" || userInfo.email === c.email) && <button
                                     className="bg-gradient shadow-default px-3 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-danger-dark hover:transform-[translateY(-1px)] text-danger text-sm font-semibold stroke-danger hover:stroke-danger-dark"
-                                    onClick={() => comments.remove(c, projectId)}
+                                    onClick={() => {
+                                        softDelete(
+                                            () => comments.remove(c, projectId), 
+                                            () => comments.setList([...comments.list])
+                                        );
+                                        comments.setList([...comments.list.filter(comment => comment.id !== c.id)]);
+                                    }}
                                 >
                                     <svg className="fill-none stroke-inherit stroke-[1.5px] inline-block w-4 mr-2 mb-0.5" viewBox="0 0 24 24">
                                         <polyline points="3 6 5 6 21 6"/>
@@ -231,6 +255,17 @@ function Content({
                         </svg>
                     </Link>
                 </div>}
+                {toastVisible && <button 
+                    onClick={() => {
+                        clearTimeout(timeoutId.current);
+                        timeoutId.current = -1;
+                        setVisible(false);
+                        if(undoCallback) undoCallback();
+                    }}
+                    className="fixed left-8 bottom-6 bg-gradient shadow-default text-primary px-3 text-sm py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-secondary"
+                >
+                    Comment deleted. Undo
+                </button>}
 			</article>
 		</>
 	);
