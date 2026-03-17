@@ -1,4 +1,4 @@
-# Project Management Tool (MVP)
+# Project Management Tool
 
 ### Home page
 
@@ -81,7 +81,9 @@ git clone https://github.com/logicalPanda2/project-management-tool.git
 
 ## Demo
 
-A live demo with localStorage will be made as soon as possible. Stay tuned!
+Live site: https://logicalpanda2.github.io/project-management-tool
+
+You can view the source code on the demo branch in this repository.
 
 ## License
 
