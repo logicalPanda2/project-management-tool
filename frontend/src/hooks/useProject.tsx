@@ -12,13 +12,13 @@ export default function useProject(
 	const [description, setDescription] = useState<string>(initialDescription ?? "");
     const [status, setStatus] = useState<Status>(initialStatus ?? "INCOMPLETE");
 
-    function updateStatus(
+    async function updateStatus(
         id: string,
         tasks: ReturnType<typeof useTasks>,
         members: ReturnType<typeof useMembers>
     ) {
         try {
-            api.post(`/api/projects/${id}`, { 
+            await api.post(`/api/projects/${id}`, { 
                 project: {
                     title: title,
                     description: description,
