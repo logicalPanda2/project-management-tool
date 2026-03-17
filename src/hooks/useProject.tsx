@@ -12,12 +12,13 @@ export default function useProject(
     async function updateStatus(
         id: string,
     ) {
-        localStorage.setItem(`project/${id}`, JSON.stringify({
+        const projects: Project[] = JSON.parse(localStorage.getItem("projects")!);
+        localStorage.setItem("projects", JSON.stringify([...projects.map(p => p.id === id ? {
             title: title,
             description: description,
             status: status === "INCOMPLETE" ? "COMPLETE" : "INCOMPLETE",
             id: id,
-        }));
+        } : p)]));
         setStatus(status === "INCOMPLETE" ? "COMPLETE" : "INCOMPLETE");
     }
 

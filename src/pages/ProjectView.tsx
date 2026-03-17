@@ -12,7 +12,9 @@ export default function ProjectView() {
         replace: true,
     });
 
-	const project = useProject();
+    const projects: Project[] = JSON.parse(localStorage.getItem("projects")!);
+    const target = projects.filter(p => p.id === params.id)[0];
+	const project = useProject(target.title, target.description, target.status);
     const tasks = useTasks([], params.id!);
 	const comments = useComments([], params.id!);
 
@@ -40,8 +42,8 @@ function Content({
     const [undoCallback, setUndoCallback] = useState<Function | null>(null);
     const timeoutId = useRef<number>(-1);
     const softDeleteDelay = 8000;
-    const role = JSON.parse(localStorage.getItem("user_1_role")!);
-    const email = JSON.parse(localStorage.getItem("user_1_email")!);
+    const role = localStorage.getItem("user_1_role");
+    const email = localStorage.getItem("user_1_email")!;
 
     const softDelete = (
         deleteCallback: (...args: any[]) => any,

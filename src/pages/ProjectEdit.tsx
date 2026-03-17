@@ -11,13 +11,24 @@ export default function ProjectEdit() {
     const mode = useRef<"CREATE" | "EDIT">("CREATE");
     const stableId = useRef<string>("");
 
-    if("id" in params && typeof params.id === "string")
+    if("id" in params && typeof params.id === "string") {
         mode.current = "EDIT";
-    else 
-        stableId.current = crypto.randomUUID();
+        stableId.current = params.id!;
+    }
+    else {
+        stableId.current = stableId.current 
+            ? stableId.current 
+            : crypto.randomUUID();
+    }
 
     const formData = useFormData();
-    const project = useProject();
+    const projects: Project[] = JSON.parse(localStorage.getItem("projects")!);
+    const target = mode.current === "EDIT" ? projects.filter(p => p.id === params.id)[0] : {
+        title: "",
+        description: "",
+        status: undefined,
+    };
+    const project = useProject(target.title, target.description, target.status);
 	const tasks = useTasks([], stableId.current);
 	const members = useMembers();
 
@@ -44,7 +55,7 @@ function Content({
     tasks: ReturnType<typeof useTasks>,
     members: ReturnType<typeof useMembers>,
     formData: ReturnType<typeof useFormData>,
-    projectId: string | undefined,
+    projectId: string,
 }) {
     const navigate = useNavigate();
     const [toastVisible, setVisible] = useState<boolean>(false);
@@ -54,7 +65,7 @@ function Content({
     const timeoutId = useRef<number>(-1);
     const toastMessage = useRef<string>("");
     const softDeleteDelay = 8000;
-    const userEmail = JSON.parse(localStorage.getItem("user_1_email")!);
+    const userEmail = localStorage.getItem("user_1_email");
 
     const softDelete = (
         deleteCallback: (...args: any[]) => any,
@@ -71,10 +82,13 @@ function Content({
     }
 
     const deleteProject = async () => { 
-        localStorage.removeItem(`project/${projectId}`);
+        const projects: Project[] = JSON.parse(localStorage.getItem("projects")!);
+        const filtered = projects.filter((p) => p.id !== projectId);
+        localStorage.setItem("projects", JSON.stringify(filtered));
         localStorage.removeItem(`project/${projectId}/tasks`);
         localStorage.removeItem(`project/${projectId}/comments`);
         localStorage.removeItem(`project/${projectId}/members`);
+
         await navigate("/", {
             replace: true,
         });
@@ -83,14 +97,19 @@ function Content({
     const sendData = () => {
 		if(!validate()) return false;
         
-        localStorage.setItem(`project/${projectId}`, JSON.stringify({
+        const projects: Project[] = JSON.parse(localStorage.getItem("projects")!);
+        const replaced = mode.current === "EDIT" ? projects.map((p) => p.id === projectId ? {
             title: project.title,
             description: project.description,
             id: projectId,
             status: project.status,
-        }));
-        localStorage.setItem(`project/${projectId}/tasks`, JSON.stringify(tasks.list));
-        localStorage.setItem(`project/${projectId}/members`, JSON.stringify(members.emails));
+        } : p) : [...(projects.length > 0 ? projects : []), {
+            title: project.title,
+            description: project.description,
+            id: projectId,
+            status: project.status,
+        }];
+        localStorage.setItem("projects", JSON.stringify(replaced)); 
 
         navigate("/", {
             replace: true
@@ -319,7 +338,7 @@ function Content({
                                     className="bg-gradient shadow-default px-3 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-success-dark hover:transform-[translateY(-1px)] text-success text-sm font-semibold stroke-success hover:stroke-success-dark"
                                     onClick={(e) => {
                                         e.preventDefault();
-                                        // tasks.editStatus(t, projectId, t.status === "COMPLETE" ? "INCOMPLETE" : "COMPLETE");
+                                        tasks.editStatus(t, t.status === "COMPLETE" ? "INCOMPLETE" : "COMPLETE");
                                     }}
                                 >
                                     <svg className="fill-none stroke-inherit stroke-[1.5px] inline-block w-4 mr-2 mb-0.5" viewBox="0 0 24 24">
@@ -495,8 +514,8 @@ function Content({
                         className={`bg-gradient shadow-default px-5 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all ${desiredAction === "EDIT" ? "text-success hover:text-success-dark" : "text-danger hover:text-danger-dark"} hover:transform-[translateY(-1px)] font-semibold`}
                         onClick={
                             desiredAction === "EDIT" 
-                            ? () => { sendData(); sessionStorage.setItem("message", "Project updated"); } 
-                            : () => { deleteProject(); sessionStorage.setItem("message", "Project deleted"); }
+                            ? () => { sessionStorage.setItem("message", "Project updated"); sendData(); } 
+                            : () => { sessionStorage.setItem("message", "Project deleted"); deleteProject(); }
                         }
                     >
                         {desiredAction === "EDIT" ? "Confirm" : "Delete"}
