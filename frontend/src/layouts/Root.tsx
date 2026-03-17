@@ -1,10 +1,13 @@
+import { useEffect, useRef, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import api from "../api/api";
-import { useState } from "react";
 
 export default function Root() {
     const navigate = useNavigate();
     const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const [toastVisible, setVisible] = useState<boolean>(false);
+    const toastMessage = sessionStorage.getItem("message");
+    const toastTimeout = useRef<number>(-1);
 
     const logOut = async (): Promise<void> => {
         await api.post("/api/auth/logout");
@@ -13,6 +16,18 @@ export default function Root() {
             replace: true,
         });
     }
+
+    useEffect(() => {
+        if(toastMessage) {
+            setVisible(true);
+            toastTimeout.current = setTimeout(() => {
+                setVisible(false);
+                sessionStorage.removeItem("message");
+            }, 3500);
+        }
+
+        return () => setVisible(false);
+    }, [toastMessage]);
 
 	return (
 		<div className="flex flex-col flex-nowrap min-h-screen relative bg-default">
@@ -75,6 +90,16 @@ export default function Root() {
                     </div>
                 </div>
             </div>}
+            {toastVisible && <p 
+                onClick={() => {
+                    sessionStorage.removeItem("message");
+                    toastTimeout.current = -1;
+                    setVisible(false);
+                }}
+                className={`absolute bottom-12 self-center bg-default shadow-default px-5 py-1.5 rounded-lg ${toastMessage === "Project updated" ? "text-success" : "text-primary"} font-semibold cursor-default`}
+            >
+                {toastMessage}
+            </p>}
 		</div>
 	);
 }

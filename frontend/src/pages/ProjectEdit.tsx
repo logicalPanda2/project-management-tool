@@ -553,12 +553,21 @@ function Content({
                 <p className="text-primary text-2xl mb-12">
                     {desiredAction === "EDIT"
                     ? "Commit changes to your project?"
-                    : <p>Are you sure you want to delete this project permanently? <span className="text-secondary text-lg block mt-4">This action is <span className="font-semibold">irreversible</span>.</span></p>}
+                    : <span className="block">
+                        Are you sure you want to delete this project permanently? 
+                        <span className="text-secondary text-lg block mt-4">
+                            This action is <span className="font-semibold">irreversible</span>.
+                        </span>
+                    </span>}
                 </p>
                 <div className="flex flex-row gap-12 justify-center flex-nowrap">
                     <button
                         className={`bg-gradient shadow-default px-5 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all ${desiredAction === "EDIT" ? "text-success hover:text-success-dark" : "text-danger hover:text-danger-dark"} hover:transform-[translateY(-1px)] font-semibold`}
-                        onClick={desiredAction === "EDIT" ? sendData : deleteProject}
+                        onClick={
+                            desiredAction === "EDIT" 
+                            ? () => { sendData(); sessionStorage.setItem("message", "Project updated"); } 
+                            : () => { deleteProject(); sessionStorage.setItem("message", "Project deleted"); }
+                        }
                     >
                         {desiredAction === "EDIT" ? "Confirm" : "Delete"}
                     </button>
