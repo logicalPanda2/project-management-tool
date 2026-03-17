@@ -14,7 +14,7 @@
 
 ### Description
 
-A full-stack project management tool built with the PERN stack. So far, this project is the one that best represents my skill in web development. I look forward to improving this project further.
+A full-stack project management tool built with the PERN stack. So far, this project is the one that best represents my skill in web development. 
 
 Features:
 1. Project management: easily create and manage multiple projects and tasks
@@ -27,9 +27,8 @@ Features:
 1. [Installation](#installation)
 2. [Usage](#usage)
 3. [Tech Stack](#tech-stack)
-4. [Other](#other)
-5. [Demo (coming soon)](#demo)
-6. [License](#license)
+4. [Demo (coming soon)](#demo)
+5. [License](#license)
 
 ## Installation
 
@@ -70,7 +69,6 @@ git clone https://github.com/logicalPanda2/project-management-tool.git
 
 - React with React Router
 - Tailwind CSS
-- Motion
 - Axios
 - TypeScript
 
@@ -80,27 +78,6 @@ git clone https://github.com/logicalPanda2/project-management-tool.git
 - PostgreSQL
 - JWT Auth
 - TypeScript
-
-## Other
-
-The following will be fixed/implemented as soon as possible.
-
-### Issues to fix
-
-- Remove-all recreate-all project update logic, which causes disappearing comments 
-
-### Areas of improvement
-
-- DB transactions
-- DB query optimization
-- Refresh logic for authenticated users
-- Further component modularization
-
-### Further polish
-
-- Additional transitions with Motion
-- Soft deletions with undo
-- Confirmation dialogs and undo/completed toasts
 
 ## Demo
 
