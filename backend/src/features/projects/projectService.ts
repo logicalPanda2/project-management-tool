@@ -35,6 +35,7 @@ export async function upsert(
     // large room for performance optimization
     // FIX LATER
 	const project = await projectRepo.getById(newProject.id);
+    const comments = project ? await commentRepo.getAllByProjectId(newProject.id) : [];
     if(project) await projectRepo.deleteById(project.id);
 
     const user = await userRepo.getUserByEmail(userEmail);
@@ -42,12 +43,22 @@ export async function upsert(
 
     await projectRepo.create(newProject);
     await taskRepo.createMany(tasks, newProject.id);
+    // temporary assertion
+    for(const c of comments as {
+        title: string,
+        id: string,
+        email: string,
+        user: string,
+    }[]) {
+        const user = await userRepo.getUserByEmail(c.email);
+        if(!user) continue;
+        await commentRepo.create(c, user.id, newProject.id);
+    }
     await userRepo.addUserToProject(newProject.id, user.id, "CREATOR");
     for(const m of members) {
         const contributor = await userRepo.getUserByEmail(m.email);
         if(!contributor || contributor.id === user.id) continue;
         await userRepo.addUserToProject(newProject.id, contributor.id, "CONTRIBUTOR");
-        console.log("this one");
     }
 
     return true;
