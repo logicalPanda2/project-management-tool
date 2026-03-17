@@ -6,6 +6,7 @@ import {
 	verifyRefreshToken,
 	verifyUserCredentials,
 	userDoesNotExist,
+    renewRefreshToken,
 } from "./authService.js";
 import * as userRepo from "../users/userRepo.js";
 import hashPassword from "../../shared/utils/hashPassword.js";
@@ -54,7 +55,7 @@ export async function login(
 			sameSite: "strict",
 		});
 
-		res.json({ accessToken });
+		return res.json({ accessToken });
 	} catch (e) {
 		next(e);
 	}
@@ -77,7 +78,16 @@ export async function refresh(
 		const accessToken = await renewAccessToken(decodedUserData);
 		if (!accessToken) return res.sendStatus(403);
 
-		res.json({ accessToken });
+        const newRefreshToken = await renewRefreshToken(decodedUserData);
+        if(!newRefreshToken) return res.sendStatus(403);
+
+		res.cookie("refreshToken", newRefreshToken, {
+			httpOnly: true,
+			secure: true,
+			sameSite: "strict",
+		});
+
+        return res.json({ accessToken });
 	} catch (e) {
 		next(e);
 	}

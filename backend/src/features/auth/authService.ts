@@ -85,3 +85,13 @@ export async function renewAccessToken(payload: {
 
 	return generateAccessToken(user);
 }
+
+export async function renewRefreshToken(payload: {
+	id: string;
+}): Promise<null | string> {
+	const user = await userRepo.getUserById(payload.id);
+
+	if (!user) return null;
+
+	return generateRefreshToken(user);
+}
