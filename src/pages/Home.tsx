@@ -1,40 +1,10 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import LoadingSpinner from "../components/LoadingSpinner";
-import api from "../api/api";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 export default function Home() {
-    const [projects, setProjects] = useState<Project[] | null>(null);
-    const [isFetching, setFetching] = useState<boolean>(false);
+    const [projects, _setProjects] = useLocalStorage<Project[] | null>("projects", []);
 
-	useEffect(() => {
-        let cancelled: boolean = false;
-
-        async function fetchProject() {
-            setFetching(true);
-            try {
-                const res = await api.get(`/api/projects`);
-
-                if(cancelled) return;
-
-                setProjects(res.data.projects ?? []);
-            } catch(e) {
-                console.error(e);
-            } finally {
-                setFetching(false);
-            }
-        }
-        
-        fetchProject();
-
-        return () => {
-            cancelled = true;
-        }
-    }, []);
-
-	return isFetching
-    ? <LoadingSpinner />
-    : projects && projects.length > 0
+	return projects && projects.length > 0 
     ? (
 		projects.map((project) => (
 			<div

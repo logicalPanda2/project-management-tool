@@ -1,8 +1,7 @@
-import { useState } from "react";
-import api from "../api/api";
+import useLocalStorage from "./useLocalStorage";
 
-export default function useTasks(initial: Task[] = []) {
-	const [list, setList] = useState<Task[]>(initial ?? []);
+export default function useTasks(initial: Task[] = [], projectId: string) {
+	const [list, setList] = useLocalStorage<Task[]>(`project/${projectId}/tasks`, initial ?? []);
 
 	const add = (): void => {
 		const newTask: Task = {
@@ -14,15 +13,7 @@ export default function useTasks(initial: Task[] = []) {
 		setList([...list, newTask]);
 	};
 
-	const editStatus = async (task: Task, projectId: string, status: Status): Promise<void> => {
-        await api.post(`/api/projects/${projectId}/tasks/${task.id}`, {
-            task: {
-                title: task.title,
-                status: task.status === "INCOMPLETE" ? "COMPLETE" : "INCOMPLETE",
-                id: task.id,
-            }
-        });
-
+	const editStatus = async (task: Task, status: Status): Promise<void> => {
 		setList([
 			...list.map((t) =>
 				t.id === task.id

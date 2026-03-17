@@ -1,11 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import useTasks from "../hooks/useTasks";
 import useComments from "../hooks/useComments";
 import useProject from "../hooks/useProject";
-import useMembers from "../hooks/useMembers";
-import LoadingSpinner from "../components/LoadingSpinner";
-import api from "../api/api";
 
 export default function ProjectView() {
     const params = useParams();
@@ -16,71 +13,15 @@ export default function ProjectView() {
     });
 
 	const project = useProject();
-    const tasks = useTasks();
-	const comments = useComments();
-    const members = useMembers();
-    const [isFetching, setFetching] = useState<boolean>(false);
-    const [userInfo, setUserInfo] = useState<{ role: UserRole, email: string }>({
-        role: "CONTRIBUTOR",
-        email: "",
-    });
+    const tasks = useTasks([], params.id!);
+	const comments = useComments([], params.id!);
 
-    useEffect(() => {
-        let cancelled: boolean = false;
-
-        async function fetchProject() {
-            setFetching(true);
-            try {
-                const res = await api.get(`/api/projects/${params.id}`);
-                const roleRes = await api.get(`/api/projects/${params.id}/role`);
-
-                if(cancelled) return;
-
-                setUserInfo({
-                    role: roleRes.data.user_role,
-                    email: roleRes.data.email,
-                });
-                project.setTitle(res.data.metadata.title);
-                project.setDescription(res.data.metadata.description);
-                project.setStatus(res.data.metadata.status);
-                tasks.setList(res.data.tasks);
-                comments.setList(res.data.comments);
-                members.setEmails(res.data.members);
-            } catch(e) {
-                console.error(e);
-                if( 
-                    typeof e === "object" &&
-                    e !== null &&
-                    "status" in e &&
-                    (
-                        e.status === 404 ||
-                        e.status === 403
-                    )
-                ) navigate("/404", {
-                    replace: true,
-                });
-            } finally {
-                setFetching(false);
-            }
-        }
-        
-        fetchProject();
-
-        return () => {
-            cancelled = true;
-        }
-    }, []);
-
-    return isFetching 
-        ? <LoadingSpinner />
-        : <Content 
-            project={project}
-            tasks={tasks}
-            comments={comments}
-            updateProjectStatus={() => project.updateStatus(params.id!, tasks, members)}
-            projectId={params.id!}
-            userInfo={userInfo}
-        />;
+    return <Content 
+        project={project}
+        tasks={tasks}
+        comments={comments}
+        updateProjectStatus={() => project.updateStatus(params.id!)}
+    />;
 }
 
 function Content({
@@ -88,24 +29,19 @@ function Content({
     tasks,
     comments,
     updateProjectStatus,
-    projectId,
-    userInfo,
 }: {
     project: ReturnType<typeof useProject>,
     tasks: ReturnType<typeof useTasks>,
     comments: ReturnType<typeof useComments>,
     updateProjectStatus: () => void,
-    projectId: string,
-    userInfo: {
-        role: UserRole,
-        email: string
-    }
 }) {
     const [commentField, setCommentField] = useState<string>("");
     const [toastVisible, setVisible] = useState<boolean>(false);
     const [undoCallback, setUndoCallback] = useState<Function | null>(null);
     const timeoutId = useRef<number>(-1);
     const softDeleteDelay = 8000;
+    const role = JSON.parse(localStorage.getItem("user_1_role")!);
+    const email = JSON.parse(localStorage.getItem("user_1_email")!);
 
     const softDelete = (
         deleteCallback: (...args: any[]) => any,
@@ -136,7 +72,7 @@ function Content({
                             <span className={`rounded-full w-2 h-2 inline-block mr-2 ${project.status === "INCOMPLETE" ? "bg-neutral-800/40" : "bg-text-success"}`}></span>
                             {project.status}
                         </p>
-                        {userInfo.role === "CREATOR" && <button
+                        {role === "CREATOR" && <button
                             className="bg-gradient shadow-default px-3 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-success-dark hover:transform-[translateY(-1px)] text-success font-semibold stroke-success hover:stroke-success-dark mt-4 sm:mt-0"
                             onClick={(e) => {
                                 e.preventDefault();
@@ -170,7 +106,7 @@ function Content({
                             </div>
                             <button
                                 className="bg-gradient shadow-default px-3 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-success-dark hover:transform-[translateY(-1px)] text-success text-sm font-semibold stroke-success hover:stroke-success-dark"
-                                onClick={() => tasks.editStatus(t, projectId, t.status === "COMPLETE" ? "INCOMPLETE" : "COMPLETE")}
+                                onClick={() => tasks.editStatus(t, t.status === "COMPLETE" ? "INCOMPLETE" : "COMPLETE")}
                             >
                                 <svg className="fill-none stroke-inherit stroke-[1.5px] inline-block w-4 mr-2 mb-0.5" viewBox="0 0 24 24">
                                     <polyline points="20 6 9 17 4 12"/>
@@ -194,11 +130,11 @@ function Content({
 									<p className="mb-2 text-secondary">{c.email}</p>
 									<p className="text-lg">{c.title}</p>
 								</div>
-								{(userInfo.role === "CREATOR" || userInfo.email === c.email) && <button
+								{(role === "CREATOR" || email === c.email) && <button
                                     className="bg-gradient shadow-default px-3 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-danger-dark hover:transform-[translateY(-1px)] text-danger text-sm font-semibold stroke-danger hover:stroke-danger-dark"
                                     onClick={() => {
                                         softDelete(
-                                            () => comments.remove(c, projectId), 
+                                            () => comments.remove(c), 
                                             () => comments.setList([...comments.list])
                                         );
                                         comments.setList([...comments.list.filter(comment => comment.id !== c.id)]);
@@ -236,7 +172,7 @@ function Content({
 							onClick={() => {
                                 if(!commentField.trim()) return;
         
-                                comments.post(commentField, projectId, userInfo.email);
+                                comments.post(commentField, email);
                                 setCommentField("");
                             }}
 						>
@@ -244,7 +180,7 @@ function Content({
 						</button>
 					</div>
 				</section>
-				{userInfo.role === "CREATOR" && <div className="hover:transform-[translateY(-1px)] transition-custom-all w-fit">
+				{role === "CREATOR" && <div className="hover:transform-[translateY(-1px)] transition-custom-all w-fit">
                     <Link
                         to={`edit`}
                         className="bg-gradient shadow-default text-primary px-4 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-accent flex flex-row flex-nowrap items-center stroke-neutral-800 hover:stroke-accent"

@@ -5,91 +5,30 @@ import useProject from "../hooks/useProject";
 import useTasks from "../hooks/useTasks";
 import useMembers from "../hooks/useMembers";
 import validateEmail from "../utils/validateEmail";
-import api from "../api/api";
-import LoadingSpinner from "../components/LoadingSpinner";
 
 export default function ProjectEdit() {
+    const params = useParams();
+    const mode = useRef<"CREATE" | "EDIT">("CREATE");
+    const stableId = useRef<string>("");
+
+    if("id" in params && typeof params.id === "string")
+        mode.current = "EDIT";
+    else 
+        stableId.current = crypto.randomUUID();
+
     const formData = useFormData();
     const project = useProject();
-	const tasks = useTasks();
+	const tasks = useTasks([], stableId.current);
 	const members = useMembers();
-    const params = useParams();
-    const navigate = useNavigate();
-    const [isFetching, setFetching] = useState<boolean>(false);
-    const [userInfo, setUserInfo] = useState<{ role: UserRole, email: string }>({
-        role: "CONTRIBUTOR",
-        email: "",
-    });
-    const mode = useRef<"CREATE" | "EDIT">("CREATE");
 
-    useEffect(() => {
-        if(
-            !("id" in params) ||
-            typeof params.id !== "string"
-        ) {
-            // no need to set mode
-            // since the default mode is already "CREATE"
-            return;
-        }
-
-        let cancelled: boolean = false;
-        mode.current = "EDIT";
-
-        async function fetchProject() {
-            setFetching(true);
-            try {
-                const roleRes = await api.get(`/api/projects/${params.id}/role`);
-                if(roleRes.data.user_role !== "CREATOR") throw { status: 403, message: "Forbidden" };
-
-                const res = await api.get(`/api/projects/${params.id}`);
-
-                if(cancelled) return;
-
-                setUserInfo({
-                    role: roleRes.data.user_role,
-                    email: roleRes.data.email,
-                });
-                project.setTitle(res.data.metadata.title);
-                project.setDescription(res.data.metadata.description);
-                project.setStatus(res.data.metadata.status);
-                tasks.setList(res.data.tasks);
-                members.setEmails(res.data.members);
-            } catch(e) {
-                console.error(e);
-                if( 
-                    typeof e === "object" &&
-                    e !== null &&
-                    "status" in e &&
-                    (
-                        e.status === 404 ||
-                        e.status === 403
-                    )
-                ) navigate("/404", {
-                    replace: true,
-                });
-            } finally {
-                setFetching(false);
-            }
-        }
-        
-        fetchProject();
-
-        return () => {
-            cancelled = true;
-        }
-    }, []);
-
-    return isFetching
-        ? <LoadingSpinner />
-        : <Content 
-            mode={mode}
-            project={project}
-            tasks={tasks}
-            members={members}
-            formData={formData}
-            paramsId={params.id!} // safe non-null assertion as previous checks established string
-            userInfo={userInfo}
-        />
+    return <Content 
+        mode={mode}
+        project={project}
+        tasks={tasks}
+        members={members}
+        formData={formData}
+        projectId={mode.current === "EDIT" ? params.id! : stableId.current}
+    />
 }
 
 function Content({
@@ -98,19 +37,16 @@ function Content({
     tasks,
     members,
     formData,
-    paramsId,
-    userInfo
+    projectId,
 }: {
     mode: ReturnType<typeof useRef<"CREATE" | "EDIT">>,
     project: ReturnType<typeof useProject>,
     tasks: ReturnType<typeof useTasks>,
     members: ReturnType<typeof useMembers>,
     formData: ReturnType<typeof useFormData>,
-    paramsId: string,
-    userInfo: { role: UserRole, email: string },
+    projectId: string | undefined,
 }) {
     const navigate = useNavigate();
-    const [newProjectId, setNewProjectId] = useState<string>("");
     const [toastVisible, setVisible] = useState<boolean>(false);
     const [undoCallback, setUndoCallback] = useState<Function | null>(null);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -118,6 +54,7 @@ function Content({
     const timeoutId = useRef<number>(-1);
     const toastMessage = useRef<string>("");
     const softDeleteDelay = 8000;
+    const userEmail = JSON.parse(localStorage.getItem("user_1_email")!);
 
     const softDelete = (
         deleteCallback: (...args: any[]) => any,
@@ -134,7 +71,10 @@ function Content({
     }
 
     const deleteProject = async () => { 
-        await api.delete(`/api/projects/${paramsId}`);
+        localStorage.removeItem(`project/${projectId}`);
+        localStorage.removeItem(`project/${projectId}/tasks`);
+        localStorage.removeItem(`project/${projectId}/comments`);
+        localStorage.removeItem(`project/${projectId}/members`);
         await navigate("/", {
             replace: true,
         });
@@ -143,30 +83,20 @@ function Content({
     const sendData = () => {
 		if(!validate()) return false;
         
-        const id = 
-            mode.current === "CREATE" 
-            ? newProjectId ? newProjectId : crypto.randomUUID() 
-            : paramsId;
-        if(!newProjectId) setNewProjectId(id);
+        localStorage.setItem(`project/${projectId}`, JSON.stringify({
+            title: project.title,
+            description: project.description,
+            id: projectId,
+            status: project.status,
+        }));
+        localStorage.setItem(`project/${projectId}/tasks`, JSON.stringify(tasks.list));
+        localStorage.setItem(`project/${projectId}/members`, JSON.stringify(members.emails));
 
-        api.post(`/api/projects/${id}`, {
-            project: {
-                title: project.title,
-                description: project.description,
-                id: id,
-                status: project.status,
-            },
-            tasks: tasks.list,
-            members: members.emails,
-        }).then((_res) => {
-            navigate("/", {
-                replace: true,
-            });
-        }).catch((e) => {
-            console.error(e);
+        navigate("/", {
+            replace: true
         });
 
-        return undefined;
+        return true;
 	};
 
 	const validate = () => {
@@ -389,7 +319,7 @@ function Content({
                                     className="bg-gradient shadow-default px-3 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-success-dark hover:transform-[translateY(-1px)] text-success text-sm font-semibold stroke-success hover:stroke-success-dark"
                                     onClick={(e) => {
                                         e.preventDefault();
-                                        tasks.editStatus(t, paramsId, t.status === "COMPLETE" ? "INCOMPLETE" : "COMPLETE");
+                                        // tasks.editStatus(t, projectId, t.status === "COMPLETE" ? "INCOMPLETE" : "COMPLETE");
                                     }}
                                 >
                                     <svg className="fill-none stroke-inherit stroke-[1.5px] inline-block w-4 mr-2 mb-0.5" viewBox="0 0 24 24">
@@ -458,24 +388,24 @@ function Content({
                             key={u.id}
                             onClick={() => document.getElementById(u.id)?.focus()}
                         >
-                            <div className={`flex sm:flex-row flex-col justify-between w-full items-start flex-nowrap ${userInfo.email !== u.email ? "mb-8 sm:mb-5" : "mb-0"} gap-4 sm:gap-0`}>
+                            <div className={`flex sm:flex-row flex-col justify-between w-full items-start flex-nowrap ${userEmail !== u.email ? "mb-8 sm:mb-5" : "mb-0"} gap-4 sm:gap-0`}>
                                 <input
                                     type="text"
                                     autoComplete="false"
                                     className="text-primary text-lg focus-visible:outline-0 resize-none w-full sm:w-2/3 [scrollbar-width:none]"
                                     id={u.id}
                                     name={u.id}
-                                    readOnly={userInfo.email !== u.email ? false : true}
-                                    disabled={userInfo.email !== u.email ? false : true}
+                                    readOnly={userEmail !== u.email ? false : true}
+                                    disabled={userEmail !== u.email ? false : true}
                                     placeholder="Title"
-                                    value={`${u.email}${userInfo.email !== u.email ? "" : ` (You)`}`}
+                                    value={`${u.email}${userEmail !== u.email ? "" : ` (You)`}`}
                                     onChange={(e) => {
                                         formData.setEmailFieldErr("");
                                         members.edit(u, e.target.value);
                                     }}
                                 />
                             </div>
-                            {userInfo.email !== u.email && <button
+                            {userEmail !== u.email && <button
                                 className="bg-gradient shadow-default px-3 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-danger-dark hover:transform-[translateY(-1px)] text-danger text-sm font-semibold stroke-danger hover:stroke-danger-dark"
                                 onClick={() => {
                                     formData.setEmailFieldErr("");
