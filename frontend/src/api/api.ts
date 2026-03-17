@@ -9,6 +9,12 @@ const api = axios.create({
     }
 });
 
+let isRefreshing = false;
+let failedRequests: {
+    resolve: (value: unknown) => void,
+    reject: (reason?: any) => void,
+}[] = [];
+
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem("token");
@@ -20,21 +26,51 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
     (res) => res,
-    (err) => {
+    async (err) => {
         const isAuthRoute = err.config?.url?.startsWith("/api/auth");
         if(err.response?.status === 401 && !isAuthRoute) {
+            if(isRefreshing) {
+                // store completion triggers inside the queue,
+                // define the retry request inside .then()
+                return new Promise((resolve, reject) => {
+                    failedRequests.push({ resolve, reject });  
+                }).then(newToken => {
+                    return axios(err.config?.url, {
+                        method: err.config?.method,
+                        data: err.config?.data ? err.config?.data : null,
+                        headers: {
+                            Authorization: `Bearer ${newToken}`,   
+                        }
+                    });
+                })
+            }
+
+            isRefreshing = true;
+
             try {
                 const token = localStorage.getItem("token");
                 if(!token) throw new Error("Null access token");
 
                 const exp = getExpiryTime(token);
                 if(Date.now() >= exp) {
-                    refreshAccessToken();
+                    await refreshAccessToken();
+                    const token = JSON.parse(localStorage.getItem("token")!)["accessToken"];
+                    processQueue(null, token);
+                    return axios(err.config?.url, {
+                        method: err.config?.method,
+                        data: err.config?.data ? JSON.parse(err.config?.data) : null,
+                        headers: {
+                            Authorization: `Bearer ${token}`,   
+                        }
+                    });
                 }
                 else throw new Error("An unexpected error occured");
             } catch(e) {
+                processQueue(e);
                 localStorage.removeItem("token");
                 window.location.href = "/login";
+            } finally {
+                isRefreshing = false;
             }
         }
         return Promise.reject(err);
@@ -58,6 +94,13 @@ async function refreshAccessToken() {
     } catch(e) {
         console.error(e);
     }
+}
+
+function processQueue(error: unknown, token: null | string = null) {
+    failedRequests.forEach(({ resolve, reject }) => {
+        if(error) reject(error);
+        else resolve(token);
+    })
 }
 
 export default api;
