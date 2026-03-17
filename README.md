@@ -1,4 +1,4 @@
-# Project Management Tool (MVP)
+# Project Management Tool
 
 ### Home page
 
@@ -14,7 +14,7 @@
 
 ### Description
 
-A full-stack project management tool built with the PERN stack. So far, this project is the one that best represents my skill in web development. 
+Frontend-only, static demo of the project management tool.
 
 Features:
 1. Project management: easily create and manage multiple projects and tasks
@@ -27,8 +27,7 @@ Features:
 1. [Installation](#installation)
 2. [Usage](#usage)
 3. [Tech Stack](#tech-stack)
-4. [Demo (coming soon)](#demo)
-5. [License](#license)
+4. [License](#license)
 
 ## Installation
 
@@ -38,50 +37,16 @@ git clone https://github.com/logicalPanda2/project-management-tool.git
 
 ## Usage
 
-### Configuring the database
-
-1. Start the Postgres server through services.msc
-2. (OPTIONAL) create a dedicated user for the project to use
-3. Log in to the postgres CLI
-4. Create a database for the project and connect to it
-5. Copy the absolute path of the migration script `backend/src/db/migrations/001_create_users_and_projects.sql`
-6. Run the migration script
-
-### Running the backend
-
-1. Move to the backend directory: `cd ./project-management-tool/backend`
-2. Install the dependencies
-3. Create a `.env` file inside the root backend directory
-4. Write down the information according to .env.example (use `openssl rand -hex 64` in Git Bash for secret keys)
-5. Start the backend
-
-### Running the frontend
-
-1. Move to the frontend directory: `cd ./project-management-tool/frontend`
-2. Install the dependencies
-3. Start the frontend
-4. Press `O + Enter` to go to the website
-5. Register an account, log in, and start using the app.
+```
+bun dev
+```
+Then click `o + Enter` to open the page.
 
 ## Tech Stack
 
-### Frontend
-
 - React with React Router
 - Tailwind CSS
-- Axios
 - TypeScript
-
-### Backend
-
-- Express
-- PostgreSQL
-- JWT Auth
-- TypeScript
-
-## Demo
-
-A live demo with localStorage will be made as soon as possible. Stay tuned!
 
 ## License
 
