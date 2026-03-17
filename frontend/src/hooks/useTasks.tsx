@@ -14,14 +14,14 @@ export default function useTasks(initial: Task[] = []) {
 		setList([...list, newTask]);
 	};
 
-	const editStatus = async (task: Task, projectId: string, status: Status): Promise<void> => {
-        await api.post(`/api/projects/${projectId}/tasks/${task.id}`, {
+	const editStatus = async (task: Task, projectId: string | null | undefined, status: Status): Promise<void> => {
+        projectId ? await api.post(`/api/projects/${projectId}/tasks/${task.id}`, {
             task: {
                 title: task.title,
                 status: task.status === "INCOMPLETE" ? "COMPLETE" : "INCOMPLETE",
                 id: task.id,
             }
-        });
+        }) : true;
 
 		setList([
 			...list.map((t) =>
