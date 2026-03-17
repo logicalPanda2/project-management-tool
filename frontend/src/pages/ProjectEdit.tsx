@@ -16,6 +16,10 @@ export default function ProjectEdit() {
     const params = useParams();
     const navigate = useNavigate();
     const [isFetching, setFetching] = useState<boolean>(false);
+    const [userInfo, setUserInfo] = useState<{ role: UserRole, email: string }>({
+        role: "CONTRIBUTOR",
+        email: "",
+    });
     const mode = useRef<"CREATE" | "EDIT">("CREATE");
 
     useEffect(() => {
@@ -41,6 +45,10 @@ export default function ProjectEdit() {
 
                 if(cancelled) return;
 
+                setUserInfo({
+                    role: roleRes.data.user_role,
+                    email: roleRes.data.email,
+                });
                 project.setTitle(res.data.metadata.title);
                 project.setDescription(res.data.metadata.description);
                 project.setStatus(res.data.metadata.status);
@@ -80,6 +88,7 @@ export default function ProjectEdit() {
             members={members}
             formData={formData}
             paramsId={params.id!} // safe non-null assertion as previous checks established string
+            userInfo={userInfo}
         />
 }
 
@@ -89,7 +98,8 @@ function Content({
     tasks,
     members,
     formData,
-    paramsId
+    paramsId,
+    userInfo
 }: {
     mode: ReturnType<typeof useRef<"CREATE" | "EDIT">>,
     project: ReturnType<typeof useProject>,
@@ -97,6 +107,7 @@ function Content({
     members: ReturnType<typeof useMembers>,
     formData: ReturnType<typeof useFormData>,
     paramsId: string,
+    userInfo: { role: UserRole, email: string },
 }) {
     const navigate = useNavigate();
     const [newProjectId, setNewProjectId] = useState<string>("");
@@ -438,22 +449,24 @@ function Content({
                             key={u.id}
                             onClick={() => document.getElementById(u.id)?.focus()}
                         >
-                            <div className="flex sm:flex-row flex-col justify-between w-full items-start flex-nowrap mb-8 sm:mb-5 gap-4 sm:gap-0">
+                            <div className={`flex sm:flex-row flex-col justify-between w-full items-start flex-nowrap ${userInfo.email !== u.email ? "mb-8 sm:mb-5" : "mb-0"} gap-4 sm:gap-0`}>
                                 <input
                                     type="text"
                                     autoComplete="false"
                                     className="text-primary text-lg focus-visible:outline-0 resize-none w-full sm:w-2/3 [scrollbar-width:none]"
                                     id={u.id}
                                     name={u.id}
+                                    readOnly={userInfo.email !== u.email ? false : true}
+                                    disabled={userInfo.email !== u.email ? false : true}
                                     placeholder="Title"
-                                    value={u.email}
+                                    value={`${u.email}${userInfo.email !== u.email ? "" : ` (You)`}`}
                                     onChange={(e) => {
                                         formData.setEmailFieldErr("");
                                         members.edit(u, e.target.value);
                                     }}
                                 />
                             </div>
-                            <button
+                            {userInfo.email !== u.email && <button
                                 className="bg-gradient shadow-default px-3 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-danger-dark hover:transform-[translateY(-1px)] text-danger text-sm font-semibold stroke-danger hover:stroke-danger-dark"
                                 onClick={() => {
                                     formData.setEmailFieldErr("");
@@ -472,7 +485,7 @@ function Content({
                                     <path d="M9 6V4h6v2"/>
                                 </svg>
                                 Remove
-                            </button>
+                            </button>}
                         </div>
 					))
 				)}
