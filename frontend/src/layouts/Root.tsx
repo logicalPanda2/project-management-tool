@@ -1,8 +1,11 @@
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import api from "../api/api";
+import { useState } from "react";
 
 export default function Root() {
     const navigate = useNavigate();
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
+
     const logOut = async (): Promise<void> => {
         await api.post("/api/auth/logout");
         localStorage.removeItem("token");
@@ -47,10 +50,31 @@ export default function Root() {
 			</main>
             <button
                 className="bg-gradient shadow-default px-3 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-danger-dark hover:transform-[translateY(-1px)] text-danger text-sm font-semibold stroke-danger hover:stroke-danger-dark self-end mb-6 mr-8"
-                onClick={logOut}
+                onClick={() => setModalVisible(true)}
             >
                 Log out
             </button>
+            {modalVisible && <div className="absolute min-h-screen min-w-screen inset-0 bg-[rgba(0,0,0,0.2)] z-10 flex justify-center items-center">
+                <div
+                    className="max-w-sm md:w-4/5 mb-6 p-6 bg-gradient rounded-2xl relative"
+                >
+                    <p className="text-primary text-2xl mb-8">Are you sure you want to log out?</p>
+                    <div className="flex flex-row gap-12 justify-center flex-nowrap">
+                        <button
+                            className="bg-gradient shadow-default px-5 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-danger-dark hover:transform-[translateY(-1px)] text-danger font-semibold stroke-danger hover:stroke-danger-dark"
+                            onClick={logOut}
+                        >
+                            Log out
+                        </button>
+                        <button
+                            className="bg-gradient shadow-default text-primary px-5 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-secondary hover:transform-[translateY(-1px)]"
+                            onClick={() => setModalVisible(false)}
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>}
 		</div>
 	);
 }
