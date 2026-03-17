@@ -113,6 +113,8 @@ function Content({
     const [newProjectId, setNewProjectId] = useState<string>("");
     const [toastVisible, setVisible] = useState<boolean>(false);
     const [undoCallback, setUndoCallback] = useState<Function | null>(null);
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const [desiredAction, setAction] = useState<"DELETE" | "EDIT" | "">("");
     const timeoutId = useRef<number>(-1);
     const toastMessage = useRef<string>("");
     const softDeleteDelay = 8000;
@@ -129,6 +131,13 @@ function Content({
             setVisible(false);
             setUndoCallback(null);
         }, softDeleteDelay);
+    }
+
+    const deleteProject = async () => { 
+        await api.delete(`/api/projects/${paramsId}`);
+        await navigate("/", {
+            replace: true,
+        });
     }
 
     const sendData = () => {
@@ -244,7 +253,7 @@ function Content({
             formData.setEmailFieldErr("");
     }, [formData.emailField]);
 
-    return (
+    return (<>
 		<form action="" className="max-w-xl relative">
 			<section className="mb-10">
 				<header>
@@ -494,7 +503,12 @@ function Content({
                 className="bg-gradient shadow-default px-3 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-success-dark hover:transform-[translateY(-1px)] text-success text-sm font-semibold stroke-success hover:stroke-success-dark"
                 onClick={(e) => {
                     e.preventDefault();
-                    sendData();
+                    if(mode.current === "EDIT") {
+                        setAction("EDIT");
+                        setModalVisible(true);
+                    } else if(mode.current === "CREATE") {
+                        sendData();
+                    }
                 }}
                 type="submit"
             >
@@ -505,12 +519,10 @@ function Content({
             </button>
             {mode.current === "EDIT" && <button
                 className="bg-gradient shadow-default px-3 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-danger-dark hover:transform-[translateY(-1px)] text-danger text-sm font-semibold stroke-danger hover:stroke-danger-dark ml-4"
-                onClick={async (e) => {
+                onClick={(e) => {
                     e.preventDefault();
-                    await api.delete(`/api/projects/${paramsId}`);
-                    await navigate("/", {
-                        replace: true,
-                    });
+                    setAction("DELETE")
+                    setModalVisible(true);
                 }}
             >
                 <svg className="fill-none stroke-inherit stroke-[1.5px] inline-block w-4 mr-2 mb-0.5" viewBox="0 0 24 24">
@@ -534,5 +546,33 @@ function Content({
                 {toastMessage.current}
             </button>}
 		</form>
-	);
+        {modalVisible && <div className="fixed min-h-screen min-w-screen inset-0 bg-[rgba(0,0,0,0.2)] z-10 flex justify-center items-center">
+            <div
+                className="max-w-xl md:w-4/5 mb-6 p-6 bg-gradient rounded-2xl relative"
+            >
+                <p className="text-primary text-2xl mb-12">
+                    {desiredAction === "EDIT"
+                    ? "Commit changes to your project?"
+                    : <p>Are you sure you want to delete this project permanently? <span className="text-secondary text-lg block mt-4">This action is <span className="font-semibold">irreversible</span>.</span></p>}
+                </p>
+                <div className="flex flex-row gap-12 justify-center flex-nowrap">
+                    <button
+                        className={`bg-gradient shadow-default px-5 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all ${desiredAction === "EDIT" ? "text-success hover:text-success-dark" : "text-danger hover:text-danger-dark"} hover:transform-[translateY(-1px)] font-semibold`}
+                        onClick={desiredAction === "EDIT" ? sendData : deleteProject}
+                    >
+                        {desiredAction === "EDIT" ? "Confirm" : "Delete"}
+                    </button>
+                    <button
+                        className="bg-gradient shadow-default text-primary px-5 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-secondary hover:transform-[translateY(-1px)]"
+                        onClick={() => {
+                            setModalVisible(false);
+                            setAction("");
+                        }}
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>}
+	</>);
 }
