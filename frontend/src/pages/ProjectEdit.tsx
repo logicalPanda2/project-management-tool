@@ -100,6 +100,25 @@ function Content({
 }) {
     const navigate = useNavigate();
     const [newProjectId, setNewProjectId] = useState<string>("");
+    const [toastVisible, setVisible] = useState<boolean>(false);
+    const [undoCallback, setUndoCallback] = useState<Function | null>(null);
+    const timeoutId = useRef<number>(-1);
+    const toastMessage = useRef<string>("");
+    const softDeleteDelay = 8000;
+
+    const softDelete = (
+        deleteCallback: (...args: any[]) => any,
+        undoCallback: (...args: any[]) => any,
+    ) => {
+        setVisible(true);
+        setUndoCallback(() => undoCallback);
+
+        timeoutId.current = setTimeout(() => {
+            deleteCallback();
+            setVisible(false);
+            setUndoCallback(null);
+        }, softDeleteDelay);
+    }
 
     const sendData = () => {
 		if(!validate()) return false;
@@ -215,7 +234,7 @@ function Content({
     }, [formData.emailField]);
 
     return (
-		<form action="" className="max-w-xl">
+		<form action="" className="max-w-xl relative">
 			<section className="mb-10">
 				<header>
 					<h2 className="text-3xl mb-5 text-primary font-semibold">{mode.current === "EDIT" ? "Edit project" : "New project"}</h2>
@@ -330,7 +349,12 @@ function Content({
                                     className="bg-gradient shadow-default px-3 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-danger-dark hover:transform-[translateY(-1px)] text-danger text-sm font-semibold stroke-danger hover:stroke-danger-dark"
                                     onClick={() => {
                                         formData.setTaskFieldErr("");
+                                        softDelete(
+                                            () => tasks.remove(t),
+                                            () => tasks.setList([...tasks.list]),
+                                        );
                                         tasks.remove(t);
+                                        toastMessage.current = "Task deleted. Undo";
                                     }}
                                 >
                                     <svg className="fill-none stroke-inherit stroke-[1.5px] inline-block w-4 mr-2 mb-0.5" viewBox="0 0 24 24">
@@ -433,7 +457,12 @@ function Content({
                                 className="bg-gradient shadow-default px-3 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-danger-dark hover:transform-[translateY(-1px)] text-danger text-sm font-semibold stroke-danger hover:stroke-danger-dark"
                                 onClick={() => {
                                     formData.setEmailFieldErr("");
-                                    members.remove(u)
+                                    softDelete(
+                                        () => members.remove(u),
+                                        () => members.setEmails([...members.emails]),
+                                    );
+                                    members.remove(u);
+                                    toastMessage.current = "Member removed. Undo";
                                 }}
                             >
                                 <svg className="fill-none stroke-inherit stroke-[1.5px] inline-block w-4 mr-2 mb-0.5" viewBox="0 0 24 24">
@@ -478,6 +507,18 @@ function Content({
                     <path d="M9 6V4h6v2"/>
                 </svg>
                 Delete
+            </button>}
+            {toastVisible && <button 
+                onClick={() => {
+                    clearTimeout(timeoutId.current);
+                    timeoutId.current = -1;
+                    toastMessage.current = "";
+                    setVisible(false);
+                    if(undoCallback) undoCallback();
+                }}
+                className="fixed left-8 bottom-6 bg-gradient shadow-default text-primary px-3 text-sm py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-secondary"
+            >
+                {toastMessage.current}
             </button>}
 		</form>
 	);
