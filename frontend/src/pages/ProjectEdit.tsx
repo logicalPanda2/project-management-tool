@@ -99,11 +99,16 @@ function Content({
     paramsId: string,
 }) {
     const navigate = useNavigate();
+    const [newProjectId, setNewProjectId] = useState<string>("");
 
     const sendData = () => {
 		if(!validate()) return false;
         
-        const id = mode.current === "CREATE" ? crypto.randomUUID() : paramsId;
+        const id = 
+            mode.current === "CREATE" 
+            ? newProjectId ? newProjectId : crypto.randomUUID() 
+            : paramsId;
+        if(!newProjectId) setNewProjectId(id);
 
         api.post(`/api/projects/${id}`, {
             project: {
