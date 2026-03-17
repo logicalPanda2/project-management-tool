@@ -108,7 +108,11 @@ export function logout(
 			expires: new Date(0),
 			maxAge: 0,
 		});
+
+        return res.sendStatus(204);
 	} catch (e) {
 		next(e);
 	}
+
+    return undefined;
 }

@@ -1,8 +1,10 @@
 import { Link, Outlet, useNavigate } from "react-router-dom";
+import api from "../api/api";
 
 export default function Root() {
     const navigate = useNavigate();
-    const logOut = (): void => {
+    const logOut = async (): Promise<void> => {
+        await api.post("/api/auth/logout");
         localStorage.removeItem("token");
         navigate("/login", {
             replace: true,
