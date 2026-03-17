@@ -14,8 +14,8 @@ export default function useTasks(initial: Task[] = []) {
 		setList([...list, newTask]);
 	};
 
-	const editStatus = (task: Task, status: Status): void => {
-        api.post(`/api/tasks/${task.id}`, {
+	const editStatus = (task: Task, projectId: string, status: Status): void => {
+        api.post(`/api/projects/${projectId}/tasks/${task.id}`, {
             task: {
                 title: task.title,
                 status: task.status === "INCOMPLETE" ? "COMPLETE" : "INCOMPLETE",

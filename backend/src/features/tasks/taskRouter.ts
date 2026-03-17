@@ -6,7 +6,7 @@ const taskRouter = express.Router({ mergeParams: true });
 
 taskRouter.get("/", requireRole("CONTRIBUTOR"), Controllers.getAll);
 taskRouter.post("/", requireRole("CREATOR"), Controllers.create);
-taskRouter.post("/:taskId", requireRole("CREATOR"), Controllers.update);
+taskRouter.post("/:taskId", requireRole("CONTRIBUTOR"), Controllers.update);
 taskRouter.delete("/:taskId", requireRole("CREATOR"), Controllers.remove);
 
 export default taskRouter;

@@ -6,9 +6,9 @@ export async function create(
 	projectId: string,
 ) {
 	await pool?.query(
-		`INSERT INTO comments (title, project_id, user_id) 
-        VALUES ($1, $2, $3);`,
-		[comment.title, projectId, userId],
+		`INSERT INTO comments (title, project_id, user_id, id) 
+        VALUES ($1, $2, $3, $4);`,
+		[comment.title, projectId, userId, comment.id],
 	);
 }
 
@@ -35,7 +35,7 @@ export async function getAssociatedUserId(
     commentId: string,
 ): Promise<{ user_id: string }> {
     const result = await pool?.query(
-		`SELECT user_id FROM comments WHERE id = $1`,
+		`SELECT user_id FROM comments WHERE id = $1;`,
 		[commentId],
 	);
 
