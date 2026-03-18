@@ -30,7 +30,7 @@ export default function ProjectEdit() {
     };
     const project = useProject(target.title, target.description, target.status);
 	const tasks = useTasks([], stableId.current);
-	const members = useMembers();
+	const members = useMembers(JSON.parse(localStorage.getItem(`project/${params.id!}/members`)!));
 
     return <Content 
         mode={mode}
@@ -110,6 +110,7 @@ function Content({
             status: project.status,
         }];
         localStorage.setItem("projects", JSON.stringify(replaced)); 
+        localStorage.setItem(`project/${projectId}/members`, JSON.stringify(members.emails));
 
         navigate("/", {
             replace: true

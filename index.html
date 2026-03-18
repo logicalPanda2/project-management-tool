@@ -10,11 +10,18 @@
 		<div id="root"></div>
 		<script type="module" src="/src/main.tsx"></script>
         <script>
+            const admin_email = "admin@account.org";
+            const admin_role = "CREATOR";
+            const contributor_email = "contributor@account.org";
+            const contributor_role = "CONTRIBUTOR";
+            const admin_id = crypto.randomUUID();
+            const contributor_id = crypto.randomUUID();
+            const projectId = crypto.randomUUID();
             const project = {
                 title: "My project",
                 description: "This is a project made to demonstrate the app's features",
                 status: "COMPLETE",
-                id: "43b74f75-dbf6-4296-bfb9-95ad4f3e3daa",
+                id: projectId,
             }
             const tasks = [
                 {
@@ -45,7 +52,7 @@
                     id: crypto.randomUUID(),
                 },
                 {
-                    title: "Try deleting this comment from a different user.",
+                    title: "Try deleting this comment made by a different user.",
                     email: "contributor@account.org",
                     id: crypto.randomUUID(),
                 },
@@ -54,23 +61,33 @@
             if(!projects || projects.length === 0) {
                 localStorage.setItem("projects", JSON.stringify([project]));
                 localStorage.setItem(
-                    "project/43b74f75-dbf6-4296-bfb9-95ad4f3e3daa/tasks",
+                    `project/${projectId}/tasks`,
                     JSON.stringify(tasks),
                 );
                 localStorage.setItem(
-                    "project/43b74f75-dbf6-4296-bfb9-95ad4f3e3daa/comments",
+                    `project/${projectId}/comments`,
                     JSON.stringify(comments),
                 );
+                localStorage.setItem(
+                    `project/${projectId}/members`,
+                    JSON.stringify([
+                        {
+                            email: admin_email,
+                            id: admin_id,
+                        },
+                        {
+                            email: contributor_email,
+                            id: contributor_id,
+                        },
+                    ]
+                ));
+                localStorage.setItem("admin_email", admin_email);
+                localStorage.setItem("admin_role", admin_role);
+                localStorage.setItem("contributor_email", contributor_email);
+                localStorage.setItem("contributor_role", contributor_role);
+                localStorage.setItem("admin_id", admin_id);
+                localStorage.setItem("contributor_id", contributor_id);
             }
-
-            const admin_email = "admin@account.org";
-            const admin_role = "CREATOR";
-            const contributor_email = "contributor@account.org";
-            const contributor_role = "CONTRIBUTOR";
-            localStorage.setItem("admin_email", admin_email);
-            localStorage.setItem("admin_role", admin_role);
-            localStorage.setItem("contributor_email", contributor_email);
-            localStorage.setItem("contributor_role", contributor_role);
         </script>
 	</body>
 </html>
