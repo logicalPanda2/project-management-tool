@@ -42,8 +42,8 @@ function Content({
     const [undoCallback, setUndoCallback] = useState<Function | null>(null);
     const timeoutId = useRef<number>(-1);
     const softDeleteDelay = 8000;
-    const role = localStorage.getItem("user_1_role");
-    const email = localStorage.getItem("user_1_email")!;
+    const role = localStorage.getItem("admin_role");
+    const email = localStorage.getItem("admin_email")!;
 
     const softDelete = (
         deleteCallback: (...args: any[]) => any,

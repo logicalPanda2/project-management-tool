@@ -9,5 +9,68 @@
 	<body class="bg-default">
 		<div id="root"></div>
 		<script type="module" src="/src/main.tsx"></script>
+        <script>
+            const project = {
+                title: "My project",
+                description: "This is a project made to demonstrate the app's features",
+                status: "COMPLETE",
+                id: "43b74f75-dbf6-4296-bfb9-95ad4f3e3daa",
+            }
+            const tasks = [
+                {
+                    title: "You can revert the project's status or mark tasks as done. Try marking this task as done!",
+                    status: "INCOMPLETE",
+                    id: crypto.randomUUID(),
+                },
+                {
+                    title: "You can edit this project freely.",
+                    status: "INCOMPLETE",
+                    id: crypto.randomUUID(),
+                },
+                {
+                    title: "You can also switch to a different user and see the role-based access in action.",
+                    status: "INCOMPLETE",
+                    id: crypto.randomUUID(),
+                },
+            ]
+            const comments = [
+                {
+                    title: "Right now, you're using the 'ADMIN' account.",
+                    email: "admin@account.org",
+                    id: crypto.randomUUID(),
+                },
+                {
+                    title: "You can delete any comment, edit the project, and change the project's status.",
+                    email: "admin@account.org",
+                    id: crypto.randomUUID(),
+                },
+                {
+                    title: "Try deleting this comment from a different user.",
+                    email: "contributor@account.org",
+                    id: crypto.randomUUID(),
+                },
+            ]
+            const projects = JSON.parse(localStorage.getItem("projects"));
+            if(!projects || projects.length === 0) {
+                localStorage.setItem("projects", JSON.stringify([project]));
+                localStorage.setItem(
+                    "project/43b74f75-dbf6-4296-bfb9-95ad4f3e3daa/tasks",
+                    JSON.stringify(tasks),
+                );
+                localStorage.setItem(
+                    "project/43b74f75-dbf6-4296-bfb9-95ad4f3e3daa/comments",
+                    JSON.stringify(comments),
+                );
+            }
+
+            const admin_email = "admin@account.org";
+            const admin_role = "CREATOR";
+            const contributor_email = "contributor@account.org";
+            const contributor_role = "CONTRIBUTOR";
+            localStorage.setItem("admin_email", admin_email);
+            localStorage.setItem("admin_role", admin_role);
+            localStorage.setItem("contributor_email", contributor_email);
+            localStorage.setItem("contributor_role", contributor_role);
+        </script>
 	</body>
 </html>

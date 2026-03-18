@@ -65,7 +65,7 @@ function Content({
     const timeoutId = useRef<number>(-1);
     const toastMessage = useRef<string>("");
     const softDeleteDelay = 8000;
-    const userEmail = localStorage.getItem("user_1_email");
+    const userEmail = localStorage.getItem("admin_email");
 
     const softDelete = (
         deleteCallback: (...args: any[]) => any,
