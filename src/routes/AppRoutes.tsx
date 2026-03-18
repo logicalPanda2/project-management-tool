@@ -1,4 +1,4 @@
-import { Route, HashRouter } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Root from "./../layouts/Root";
 import ProjectView from "../pages/ProjectView";
 import ProjectEdit from "../pages/ProjectEdit";
@@ -7,7 +7,7 @@ import NotFound from "../pages/NotFound";
 
 export default function AppRoutes() {
 	return (
-		<HashRouter>
+		<Routes>
             <Route path="/" element={<Root />} />
 			<Route path="/:account" element={<Root />}>
 				<Route index element={<Home />} />
@@ -16,6 +16,6 @@ export default function AppRoutes() {
 			</Route>
             <Route path="/404" element={<NotFound />} /> 
 			<Route path="*" element={<NotFound />} />
-		</HashRouter>
+		</Routes>
 	);
 }
