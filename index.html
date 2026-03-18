@@ -17,11 +17,18 @@
             const admin_id = crypto.randomUUID();
             const contributor_id = crypto.randomUUID();
             const projectId = crypto.randomUUID();
+            const projectId2 = crypto.randomUUID();
             const project = {
-                title: "My project",
-                description: "This is a project made to demonstrate the app's features. Right now, you're in the admin account.",
+                title: "Shared project",
+                description: "This is a project made to demonstrate the app's features. Right now, you're in the admin account. Both accounts: admin and contributor, can view this project.",
                 status: "COMPLETE",
                 id: projectId,
+            }
+            const project2 = {
+                title: "Secret project",
+                description: "Only the admin account can see this project.",
+                status: "INCOMPLETE",
+                id: projectId2,
             }
             const tasks = [
                 {
@@ -30,7 +37,24 @@
                     id: crypto.randomUUID(),
                 },
                 {
-                    title: "You can also edit this project freely if you're an admin.",
+                    title: "You can also edit this project freely, but only while you're an admin.",
+                    status: "INCOMPLETE",
+                    id: crypto.randomUUID(),
+                },
+                {
+                    title: "If you go to the edit page then switch to the contributor account, you'll be redirected to a 404 page.",
+                    status: "INCOMPLETE",
+                    id: crypto.randomUUID(),
+                }
+            ]
+            const tasks2 = [
+                {
+                    title: "The contributor account isn't invited to this project.",
+                    status: "INCOMPLETE",
+                    id: crypto.randomUUID(),
+                },
+                {
+                    title: "If you switch to the contributor account now, you'll be redirected to a 404 page.",
                     status: "INCOMPLETE",
                     id: crypto.randomUUID(),
                 },
@@ -54,7 +78,7 @@
             ]
             const projects = JSON.parse(localStorage.getItem("projects"));
             if(!projects || projects.length === 0) {
-                localStorage.setItem("projects", JSON.stringify([project]));
+                localStorage.setItem("projects", JSON.stringify([project, project2]));
                 localStorage.setItem(
                     `project/${projectId}/tasks`,
                     JSON.stringify(tasks),
@@ -76,6 +100,21 @@
                         },
                     ]
                 ));
+
+                localStorage.setItem(
+                    `project/${projectId2}/tasks`,
+                    JSON.stringify(tasks2),
+                );
+                localStorage.setItem(
+                    `project/${projectId2}/members`,
+                    JSON.stringify([
+                        {
+                            email: admin_email,
+                            id: admin_id,
+                        },
+                    ]
+                ));
+
                 localStorage.setItem("admin_email", admin_email);
                 localStorage.setItem("admin_role", admin_role);
                 localStorage.setItem("contributor_email", contributor_email);
