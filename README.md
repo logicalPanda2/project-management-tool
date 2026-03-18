@@ -36,7 +36,12 @@ git clone https://github.com/logicalPanda2/project-management-tool.git
 ```
 
 ## Usage
-
+```
+git switch demo
+```
+```
+bun install
+```
 ```
 bun dev
 ```
