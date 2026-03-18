@@ -8,7 +8,7 @@ export default function ProjectView() {
     const params = useParams();
     const navigate = useNavigate();
 
-    if(!("id" in params)) navigate("/404", {
+    if(!("id" in params) || !("account" in params)) navigate("/404", {
         replace: true,
     });
 
@@ -23,6 +23,7 @@ export default function ProjectView() {
         tasks={tasks}
         comments={comments}
         updateProjectStatus={() => project.updateStatus(params.id!)}
+        account={params.account!}
     />;
 }
 
@@ -31,19 +32,21 @@ function Content({
     tasks,
     comments,
     updateProjectStatus,
+    account,
 }: {
     project: ReturnType<typeof useProject>,
     tasks: ReturnType<typeof useTasks>,
     comments: ReturnType<typeof useComments>,
     updateProjectStatus: () => void,
+    account: string,
 }) {
     const [commentField, setCommentField] = useState<string>("");
     const [toastVisible, setVisible] = useState<boolean>(false);
     const [undoCallback, setUndoCallback] = useState<Function | null>(null);
     const timeoutId = useRef<number>(-1);
     const softDeleteDelay = 8000;
-    const role = localStorage.getItem("admin_role");
-    const email = localStorage.getItem("admin_email")!;
+    const role = account === "admin" ? localStorage.getItem("admin_role") : localStorage.getItem("contributor_role");
+    const email = account === "admin" ? localStorage.getItem("admin_email")! : localStorage.getItem("contributor_email")!;
 
     const softDelete = (
         deleteCallback: (...args: any[]) => any,
