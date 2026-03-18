@@ -7,6 +7,8 @@ export default function Root() {
 
     useEffect(() => {
         if(!("account" in params)) redirect();
+
+        syncRoleWithURL();
     }, [params]);
 
     const assignDifferentRole = () => {
@@ -37,6 +39,21 @@ export default function Root() {
             });
         else if(currentRole === "CONTRIBUTOR")
             return navigate("/contributor", {
+                replace: true,
+            });
+    }
+
+    function syncRoleWithURL() {
+        console.log("is this run?")
+        const url = window.location.pathname;
+        const currentRole = localStorage.getItem("current");
+        
+        if(url.startsWith("/admin") && currentRole === "CONTRIBUTOR") 
+            return navigate("/contributor", {
+                replace: true,
+            });
+        else if(url.startsWith("/contributor") && currentRole === "ADMIN")
+            return navigate("/admin", {
                 replace: true,
             });
     }
