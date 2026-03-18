@@ -54,6 +54,6 @@ export default function Home() {
 		))
 	)
     : (projects && <p className="text-center text-2xl text-primary mb-6">
-        <span className="max-w-xl inline-block">There are no projects yet. Refresh the page to create the projects again!</span>
+        <span className="max-w-xl inline-block">{params.account === "contributor" ? "The contributor account isn't invited to any projects right now." : "There are no projects right now. Refresh the page to create the projects again!"}</span>
     </p>);
 }
