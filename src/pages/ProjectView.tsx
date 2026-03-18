@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import useTasks from "../hooks/useTasks";
 import useComments from "../hooks/useComments";
@@ -11,6 +11,18 @@ export default function ProjectView() {
     if(!("id" in params) || !("account" in params)) navigate("/404", {
         replace: true,
     });
+
+    const members: User[] = JSON.parse(localStorage.getItem(`project/${params.id}/members`)!);
+    const isAllowed = useRef<boolean>(false);
+    members.forEach(m => {
+        if(m.email.startsWith(params.account!)) isAllowed.current = true;
+    });
+
+    useEffect(() => {
+        if(!isAllowed.current) navigate("/404", {
+            replace: true,
+        });
+    }, [isAllowed]);
 
     const projects: Project[] = JSON.parse(localStorage.getItem("projects")!);
     const target = projects.filter(p => p.id === params.id)[0];
