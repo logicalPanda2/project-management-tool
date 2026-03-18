@@ -10,15 +10,16 @@ export default function Root() {
     }, [params]);
 
     const assignDifferentRole = () => {
+        const url = window.location.pathname;
         const currentRole = localStorage.getItem("current");
         if(currentRole === "CREATOR") {
             localStorage.setItem("current", "CONTRIBUTOR");
-            return navigate("/contributor", {
+            return navigate(url.replace("admin", "contributor"), {
                 replace: true,
             });
         } else if(currentRole === "CONTRIBUTOR") {
             localStorage.setItem("current", "CREATOR");
-            return navigate("/admin", {
+            return navigate(url.replace("contributor", "admin"), {
                 replace: true,
             });
         }
