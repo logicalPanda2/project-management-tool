@@ -44,7 +44,6 @@ export default function Root() {
     }
 
     function syncRoleWithURL() {
-        console.log("is this run?")
         const url = window.location.pathname;
         const currentRole = localStorage.getItem("current");
         
