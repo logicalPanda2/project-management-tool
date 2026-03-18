@@ -1,23 +1,6 @@
-import { useEffect, useRef, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 
 export default function Root() {
-    const [toastVisible, setVisible] = useState<boolean>(false);
-    const toastMessage = sessionStorage.getItem("message");
-    const toastTimeout = useRef<number>(-1);
-
-    useEffect(() => {
-        if(toastMessage) {
-            setVisible(true);
-            toastTimeout.current = setTimeout(() => {
-                setVisible(false);
-                sessionStorage.removeItem("message");
-            }, 3500);
-        }
-
-        return () => setVisible(false);
-    }, [toastMessage]);
-
 	return (
 		<div className="flex flex-col flex-nowrap min-h-screen relative bg-default">
 			<header className="flex flex-col md:flex-row flex-nowrap justify-between md:items-center sticky top-0 px-12 py-6 z-10 bg-transparent backdrop-blur-lg border-b-neutral-200 border-b">
@@ -42,7 +25,7 @@ export default function Root() {
                                     to={"/project/new"}
                                     className="bg-gradient shadow-default text-primary px-4 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-secondary"
                                 >
-                                    New
+                                    Switch user
                                 </Link>
                             </div>
 						</li>
@@ -52,16 +35,6 @@ export default function Root() {
 			<main className="flex flex-col grow flex-nowrap p-12">
 				<Outlet />
 			</main>
-            {toastVisible && <p 
-                onClick={() => {
-                    sessionStorage.removeItem("message");
-                    toastTimeout.current = -1;
-                    setVisible(false);
-                }}
-                className={`absolute bottom-12 self-center bg-default shadow-default px-5 py-1.5 rounded-lg ${toastMessage === "Project updated" ? "text-success" : "text-primary"} font-semibold cursor-default`}
-            >
-                {toastMessage}
-            </p>}
 		</div>
 	);
 }
