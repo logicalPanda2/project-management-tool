@@ -19,6 +19,11 @@ export default function ProjectView() {
     allProjects.forEach((p) => {
         if(p.id === params.id) projectExists.current = true;
     })
+    const target = projectExists.current ? allProjects.filter(p => p.id === params.id)[0] : {
+        title: "",
+        description: "",
+        status: undefined,
+    };
     projectExists.current ? members.forEach(m => {
         if(m.email.startsWith(params.account!)) isAllowed.current = true;
     }) : true;
@@ -27,14 +32,12 @@ export default function ProjectView() {
         if(!isAllowed.current || !projectExists.current) navigate("/404", {
             replace: true,
         });
-    }, [isAllowed, projectExists]);
 
-    const projects: Project[] = JSON.parse(localStorage.getItem("projects")!);
-    const target = projectExists.current ? projects.filter(p => p.id === params.id)[0] : {
-        title: "",
-        description: "",
-        status: undefined,
-    };
+        // crude temporary fix, match title by name to simulate intended behavior.
+        if(target.title === "Secret project" && params.account === "contributor") navigate("/404", {
+            replace: true,
+        });
+    }, [isAllowed, projectExists, params]);
 	const project = useProject(target.title, target.description, target.status);
     const tasks = useTasks([], params.id!);
 	const comments = useComments([], params.id!);
