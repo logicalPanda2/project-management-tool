@@ -8,7 +8,8 @@ import NotFound from "../pages/NotFound";
 export default function AppRoutes() {
 	return (
 		<Routes>
-			<Route path="/" element={<Root />}>
+            <Route path="/" element={<Root />} />
+			<Route path="/:account" element={<Root />}>
 				<Route index element={<Home />} />
 				<Route path="project/:id" element={<ProjectView />} />
                 <Route path="project/:id/edit" element={<ProjectEdit />} />

@@ -1,6 +1,45 @@
-import { Link, Outlet } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
 
 export default function Root() {
+    const params = useParams();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if(!("account" in params)) redirect();
+    }, [params]);
+
+    const assignDifferentRole = () => {
+        const currentRole = localStorage.getItem("current");
+        if(currentRole === "CREATOR") {
+            localStorage.setItem("current", "CONTRIBUTOR");
+            return navigate("/contributor", {
+                replace: true,
+            });
+        } else if(currentRole === "CONTRIBUTOR") {
+            localStorage.setItem("current", "CREATOR");
+            return navigate("/admin", {
+                replace: true,
+            });
+        }
+
+        return navigate("/404", {
+            replace: true,
+        });
+    }
+    
+    function redirect() {
+        const currentRole = localStorage.getItem("current");
+        if(currentRole === "CREATOR")
+            return navigate("/admin", {
+                replace: true,
+            });
+        else if(currentRole === "CONTRIBUTOR")
+            return navigate("/contributor", {
+                replace: true,
+            });
+    }
+
 	return (
 		<div className="flex flex-col flex-nowrap min-h-screen relative bg-default">
 			<header className="flex flex-col md:flex-row flex-nowrap justify-between md:items-center sticky top-0 px-12 py-6 z-10 bg-transparent backdrop-blur-lg border-b-neutral-200 border-b">
@@ -21,12 +60,12 @@ export default function Root() {
 						</li>
 						<li>
                             <div className="hover:transform-[translateY(-1px)] transition-custom-all w-fit">
-                                <Link
-                                    to={"/project/new"}
+                                <button
+                                    onClick={assignDifferentRole}
                                     className="bg-gradient shadow-default text-primary px-4 py-1.5 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-secondary"
                                 >
                                     Switch user
-                                </Link>
+                                </button>
                             </div>
 						</li>
 					</ul>
