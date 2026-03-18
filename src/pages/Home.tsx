@@ -1,8 +1,28 @@
-import { Link } from "react-router-dom";
-import useLocalStorage from "../hooks/useLocalStorage";
+import { useEffect } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 export default function Home() {
-    const [projects, _setProjects] = useLocalStorage<Project[] | null>("projects", []);
+    const params = useParams();
+    const navigate = useNavigate();
+    
+    useEffect(() => {
+        if(!("account" in params)) navigate("/404", {
+            replace: true,
+        });
+    }, [params]);
+
+    const allProjects: Project[] = JSON.parse(localStorage.getItem("projects")!);
+    const projects: Project[] | null = [];
+    allProjects.map((p) => {
+        const members: User[] = JSON.parse(localStorage.getItem(`project/${p.id}/members`)!);
+        let invited = false;
+
+        members.forEach(m => {
+            if(m.email.startsWith(params.account!)) invited = true;
+        });
+
+        if(invited) projects.push(p);
+    });
 
 	return projects && projects.length > 0 
     ? (
