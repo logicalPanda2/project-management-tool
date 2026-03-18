@@ -8,6 +8,7 @@ import validateEmail from "../utils/validateEmail";
 
 export default function ProjectEdit() {
     const params = useParams();
+    const navigate = useNavigate();
     const mode = useRef<"CREATE" | "EDIT">("CREATE");
     const stableId = useRef<string>("");
 
@@ -20,6 +21,16 @@ export default function ProjectEdit() {
             ? stableId.current 
             : crypto.randomUUID();
     }
+
+    useEffect(() => {
+        if(!("account" in params)) navigate("/404", {
+            replace: true,
+        })
+
+        if(params.account === "contributor") navigate("/404", {
+            replace: true,
+        })
+    }, [params]);
 
     const formData = useFormData();
     const projects: Project[] = JSON.parse(localStorage.getItem("projects")!);
