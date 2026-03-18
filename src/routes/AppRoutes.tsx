@@ -13,7 +13,6 @@ export default function AppRoutes() {
 				<Route index element={<Home />} />
 				<Route path="project/:id" element={<ProjectView />} />
                 <Route path="project/:id/edit" element={<ProjectEdit />} />
-                <Route path="project/new" element={<ProjectEdit />} />
 			</Route>
             <Route path="/404" element={<NotFound />} /> 
 			<Route path="*" element={<NotFound />} />

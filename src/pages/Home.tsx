@@ -53,17 +53,7 @@ export default function Home() {
 			</div>
 		))
 	)
-    : (projects && <>
-			<p className="text-center text-2xl text-primary mb-6">
-            There are no projects yet.
-        </p>
-        <div className="self-center hover:transform-[translateY(-1px)] transition-custom-all w-fit">
-            <Link
-                to={"/project/new"}
-                className="bg-gradient shadow-default text-primary px-4 py-2 rounded-lg active:shadow-pressed active:bg-gradient-pressed active:text-secondary focus-visible:outline-1 transition-custom-all hover:text-secondary"
-            >
-                New project
-            </Link>
-        </div>
-    </>);
+    : (projects && <p className="text-center text-2xl text-primary mb-6">
+        <span className="max-w-xl inline-block">There are no projects yet. Refresh the page to create the projects again!</span>
+    </p>);
 }
