@@ -14,18 +14,27 @@ export default function ProjectView() {
 
     const members: User[] = JSON.parse(localStorage.getItem(`project/${params.id}/members`)!);
     const isAllowed = useRef<boolean>(false);
-    members.forEach(m => {
+    const projectExists = useRef<boolean>(false);
+    const allProjects: Project[] = JSON.parse(localStorage.getItem(`projects`)!);
+    allProjects.forEach((p) => {
+        if(p.id === params.id) projectExists.current = true;
+    })
+    projectExists.current ? members.forEach(m => {
         if(m.email.startsWith(params.account!)) isAllowed.current = true;
-    });
+    }) : true;
 
     useEffect(() => {
-        if(!isAllowed.current) navigate("/404", {
+        if(!isAllowed.current || !projectExists.current) navigate("/404", {
             replace: true,
         });
-    }, [isAllowed]);
+    }, [isAllowed, projectExists]);
 
     const projects: Project[] = JSON.parse(localStorage.getItem("projects")!);
-    const target = projects.filter(p => p.id === params.id)[0];
+    const target = projectExists.current ? projects.filter(p => p.id === params.id)[0] : {
+        title: "",
+        description: "",
+        status: undefined,
+    };
 	const project = useProject(target.title, target.description, target.status);
     const tasks = useTasks([], params.id!);
 	const comments = useComments([], params.id!);
