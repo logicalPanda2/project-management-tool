@@ -12,36 +12,29 @@ export default function ProjectView() {
         replace: true,
     });
 
+    const allProjects: Project[] = JSON.parse(localStorage.getItem("projects")!);
+    const filtered: Project | Project[] = allProjects.filter(p => p.id === params.id);
+    const target: Project = Array.isArray(filtered) ? filtered[0] : filtered;
+    const project = useProject(target.title, target.description, target.status);
     const members: User[] = JSON.parse(localStorage.getItem(`project/${params.id}/members`)!);
-    const isAllowed = useRef<boolean>(false);
-    const projectExists = useRef<boolean>(false);
-    const allProjects: Project[] = JSON.parse(localStorage.getItem(`projects`)!);
-    allProjects.forEach((p) => {
-        if(p.id === params.id) projectExists.current = true;
-    })
-    const target = projectExists.current ? allProjects.filter(p => p.id === params.id)[0] : {
-        title: "",
-        description: "",
-        status: undefined,
-    };
-    projectExists.current ? members.forEach(m => {
-        if(m.email.startsWith(params.account!)) isAllowed.current = true;
-    }) : true;
-
-    useEffect(() => {
-        if(!isAllowed.current || !projectExists.current) navigate("/404", {
-            replace: true,
-        });
-
-        // crude temporary fix, match title by name to simulate intended behavior.
-        if(target.title === "Secret project" && params.account === "contributor") navigate("/404", {
-            replace: true,
-        });
-    }, [isAllowed, projectExists, params]);
-	const project = useProject(target.title, target.description, target.status);
     const tasks = useTasks([], params.id!);
 	const comments = useComments([], params.id!);
 
+    useEffect(() => {
+        let exhausted = false;
+        let encounteredInvitation = false;
+
+        members.forEach((m, i) => {
+            if(i === members.length - 1) exhausted = true;
+
+            if(m.email.startsWith(params.account!)) encounteredInvitation = true;
+            
+            if(exhausted && !encounteredInvitation) navigate("/404", {
+                replace: true,
+            });
+        });
+    }, [members]);
+    
     return <Content 
         project={project}
         tasks={tasks}
