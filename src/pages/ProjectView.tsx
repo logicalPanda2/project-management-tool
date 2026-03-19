@@ -33,7 +33,7 @@ export default function ProjectView() {
                 replace: true,
             });
         });
-    }, [members]);
+    }, [members, params.account]);
     
     return <Content 
         project={project}
