@@ -4,15 +4,15 @@ import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
 export default function Root() {
     const params = useParams();
     const navigate = useNavigate();
+    const url = window.location.hash;
 
     useEffect(() => {
         if(!("account" in params)) redirect();
 
         syncRoleWithURL();
-    }, [params]);
+    }, [url, params]);
 
     const assignDifferentRole = () => {
-        const url = window.location.hash;
         const currentRole = localStorage.getItem("current");
         if(currentRole === "CREATOR") {
             localStorage.setItem("current", "CONTRIBUTOR");
@@ -44,14 +44,13 @@ export default function Root() {
     }
 
     function syncRoleWithURL() {
-        const url = window.location.pathname;
         const currentRole = localStorage.getItem("current");
         
-        if(url.startsWith("/admin") && currentRole === "CONTRIBUTOR") 
+        if(url.startsWith("#/admin") && currentRole === "CONTRIBUTOR") 
             return navigate("/contributor", {
                 replace: true,
             });
-        else if(url.startsWith("/contributor") && currentRole === "ADMIN")
+        else if(url.startsWith("#/contributor") && currentRole === "CREATOR")
             return navigate("/admin", {
                 replace: true,
             });
