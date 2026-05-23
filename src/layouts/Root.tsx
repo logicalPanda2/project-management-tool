@@ -60,7 +60,7 @@ export default function Root() {
 		<div className="flex flex-col flex-nowrap min-h-screen relative bg-default">
 			<header className="flex flex-col md:flex-row flex-nowrap justify-between md:items-center sticky top-0 px-12 py-6 z-10 bg-transparent backdrop-blur-lg border-b-neutral-200 border-b">
 				<h1 className="text-3xl md:text-4xl mb-6 md:mb-0 text-primary">
-					Project Management Tool
+					SimpleProjects
 				</h1>
 				<nav className="border-t-neutral-400 border-t md:border-0 pt-6 md:pt-0">
 					<ul className="flex flex-row flex-nowrap items-center gap-4 md:gap-8">
