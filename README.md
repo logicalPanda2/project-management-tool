@@ -1,4 +1,4 @@
-# Project Management Tool
+# SimpleProjects
 
 ### Home page
 
